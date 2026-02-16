@@ -60,8 +60,8 @@
 
 <div class="container">
     <header>
-        <h1>✨ Warung Online Abay</h1>
-        <button class="btn" onclick="toggleAdmin()" style="background:#64748b">Admin</button>
+        <h1>✨Toko Online Abay</h1>
+        <button class="btn" onclick="toggleAdmin()" style="background:#64748b">Khusus Admin</button>
     </header>
 
     <div id="adminPanel">
@@ -91,7 +91,7 @@
     let isAdmin = false;
 
     function toggleAdmin() {
-        if(prompt("Password Admin:") === "123") {
+        if(prompt("Password Admin:") === "abayganteng09") {
             isAdmin = true;
             document.getElementById('adminPanel').style.display = 'block';
             muatData();
