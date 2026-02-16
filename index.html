@@ -18,6 +18,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .story-content { line-height: 1.8; color: #ccc; }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -35,10 +36,8 @@
         <nav class="fixed w-full z-50 glass px-6 py-4 flex justify-between items-center">
             <h1 class="text-xl font-black tracking-tighter uppercase">Abay Studio</h1>
             <div class="flex gap-4 text-xs font-bold uppercase">
-                <button onclick="showVisitors()" class="admin-only text-blue-400"><i class="fas fa-users mr-1"></i> Visitors</button>
-                <button onclick="showSales()" class="admin-only text-yellow-500"><i class="fas fa-chart-line mr-1"></i> Sales</button>
-                <button onclick="managePlaylist()" class="admin-only text-purple-400"><i class="fas fa-compact-disc mr-1"></i> Playlist</button>
                 <a href="#tools" class="hover:text-blue-500 transition self-center">Tools</a>
+                <a href="#stories" class="hover:text-blue-500 transition self-center">Stories</a>
                 <a href="#shop" class="hover:text-blue-500 transition self-center">Shop</a>
             </div>
         </nav>
@@ -49,56 +48,58 @@
                     <img id="p-foto" src="" class="w-48 h-48 md:w-60 md:h-60 rounded-3xl object-cover border-2 border-white/20 shadow-2xl">
                 </div>
                 <div class="flex-1 text-center md:text-left">
-                    <h1 id="p-nama" class="text-4xl md:text-6xl font-extrabold mb-2 uppercase">Loading...</h1>
-                    <p id="p-bio" class="text-blue-400 font-bold mb-6 text-xs opacity-80 uppercase tracking-widest">-</p>
+                    <h1 id="p-nama" class="text-4xl md:text-6xl font-extrabold mb-2 uppercase text-blue-500">Loading...</h1>
+                    <p id="p-bio" class="font-bold mb-6 text-xs opacity-80 uppercase tracking-widest">-</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left">
-                            <span class="block text-[10px] uppercase opacity-40 font-bold">Hobi</span>
-                            <span id="p-hobi" class="text-white">-</span>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left">
-                            <span class="block text-[10px] uppercase opacity-40 font-bold">Alamat</span>
-                            <span id="p-alamat" class="text-white">-</span>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left">
-                            <span class="block text-[10px] uppercase opacity-40 font-bold">Pendidikan</span>
-                            <span id="p-sekolah" class="text-white">-</span>
-                        </div>
-                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left">
-                            <span class="block text-[10px] uppercase opacity-40 font-bold">Keahlian</span>
-                            <span id="p-skill" class="text-white">-</span>
-                        </div>
+                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left"><span class="block text-[10px] uppercase opacity-40 font-bold">Hobi</span><span id="p-hobi">-</span></div>
+                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left"><span class="block text-[10px] uppercase opacity-40 font-bold">Alamat</span><span id="p-alamat">-</span></div>
+                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left"><span class="block text-[10px] uppercase opacity-40 font-bold">Pendidikan</span><span id="p-sekolah">-</span></div>
+                        <div class="bg-white/5 p-3 rounded-2xl border border-white/5 text-left"><span class="block text-[10px] uppercase opacity-40 font-bold">Keahlian</span><span id="p-skill">-</span></div>
                     </div>
                 </div>
             </div>
-            <button onclick="editHero()" class="admin-only mt-8 bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest">Edit Profile</button>
+            <div class="flex gap-2 mt-8">
+                <button onclick="editHero()" class="admin-only bg-blue-600 px-8 py-3 rounded-full text-xs font-bold uppercase">Edit Profile</button>
+                <button onclick="showVisitors()" class="admin-only bg-gray-800 px-8 py-3 rounded-full text-xs font-bold uppercase">Visitors</button>
+            </div>
         </section>
 
-        <section id="tools" class="py-20 px-6 max-w-6xl mx-auto">
+        <section id="stories" class="py-20 px-6 max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-4xl font-black uppercase">My Stories</h2>
+                    <p class="text-xs opacity-40 mt-2 uppercase tracking-widest">Kumpulan tulisan & cerita Abay</p>
+                </div>
+                <button onclick="addStory()" class="admin-only bg-purple-600 px-5 py-2 rounded-xl text-xs font-bold uppercase">Add Story</button>
+            </div>
+            <div id="story-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </section>
+
+        <section id="tools" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
             <h2 class="text-4xl font-black uppercase mb-12">Free Tools</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter"><i class="fab fa-tiktok mr-2"></i> Video Downloader</h3>
-                    <p class="text-xs opacity-50 mb-6">Download TikTok/IG video tanpa watermark.</p>
-                    <input id="dl-url" type="text" placeholder="Paste link here..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl mb-4 text-sm focus:outline-none">
-                    <button onclick="downloadVideo()" class="bg-white text-black w-full py-4 rounded-2xl font-bold uppercase text-xs">Download Now</button>
+                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter"><i class="fab fa-tiktok mr-2"></i> Downloader</h3>
+                    <input id="dl-url" type="text" placeholder="Paste TikTok link..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl mb-4 text-sm focus:outline-none">
+                    <button onclick="downloadVideo()" class="bg-white text-black w-full py-4 rounded-2xl font-bold uppercase text-xs">Download</button>
                 </div>
                 <div class="glass p-8 rounded-[2.5rem]">
                     <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter"><i class="fas fa-cloud-upload-alt mr-2"></i> File Uploader</h3>
-                    <p class="text-xs opacity-50 mb-6">Ubah file menjadi link URL secara instan.</p>
                     <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
-                    <button onclick="document.getElementById('file-input').click()" id="upload-btn" class="bg-blue-600 w-full py-4 rounded-2xl font-bold uppercase text-xs hover:bg-blue-500 transition">
-                        Select & Upload File
-                    </button>
-                    <div id="upload-status" class="mt-4 text-center text-xs text-blue-400 font-bold break-all"></div>
+                    <button onclick="document.getElementById('file-input').click()" class="bg-blue-600 w-full py-4 rounded-2xl font-bold uppercase text-xs">Upload File</button>
+                    <div id="upload-status" class="mt-4 text-center text-[10px] text-blue-400 font-bold break-all"></div>
                 </div>
             </div>
         </section>
 
-        <section id="shop" class="py-20 px-6 max-w-6xl mx-auto">
+        <section id="shop" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
             <div class="flex justify-between items-end mb-12">
                 <h2 class="text-4xl font-black uppercase">Marketplace</h2>
-                <button onclick="addProduct()" class="admin-only bg-green-600 px-5 py-2 rounded-xl text-xs font-bold uppercase">Add Item</button>
+                <div class="flex gap-2">
+                    <button onclick="showSales()" class="admin-only bg-yellow-600 px-5 py-2 rounded-xl text-xs font-bold uppercase">Sales</button>
+                    <button onclick="addProduct()" class="admin-only bg-green-600 px-5 py-2 rounded-xl text-xs font-bold uppercase">Add Item</button>
+                </div>
             </div>
             <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
         </section>
@@ -107,24 +108,32 @@
             <button onclick="toggleMusic()" class="glass w-12 h-12 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition shadow-2xl">
                 <i id="music-icon" class="fas fa-music"></i>
             </button>
-            <button onclick="changeMusic()" class="glass px-4 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-white/10 transition">Change Song</button>
+            <button onclick="managePlaylist()" class="admin-only glass px-4 py-2 rounded-full text-[10px] font-bold uppercase bg-purple-900/20">Manage Music</button>
+            <button onclick="changeMusic()" class="glass px-4 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-white/10">Change Song</button>
         </div>
         <audio id="bg-audio" loop></audio>
 
-        <div id="pay-modal" class="fixed inset-0 z-[100] hidden bg-black/95 flex items-center justify-center p-6 backdrop-blur-md">
-            <div class="glass max-w-md w-full p-8 rounded-[2rem] relative border-white/10">
-                <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times"></i></button>
-                <h3 id="m-name" class="text-2xl font-black mb-1 text-center uppercase"></h3>
-                <p id="m-price" class="text-blue-500 font-bold mb-8 text-center text-xl"></p>
-                <div class="space-y-4 mb-8">
-                    <div class="p-4 bg-white/5 rounded-2xl border border-white/10 flex justify-between items-center">
-                        <div><p class="text-[10px] opacity-40 font-bold">DANA/GOPAY</p><p class="font-bold text-lg">087893344461</p></div>
-                        <button onclick="copy('087893344461')" class="bg-blue-600 p-3 rounded-xl"><i class="fas fa-copy"></i></button>
-                    </div>
-                    <div class="bg-white p-3 rounded-2xl flex flex-col items-center">
-                        <img src="https://files.catbox.moe/nzkt5h.jpg" class="w-44 h-44 object-contain">
+        <div id="story-modal" class="fixed inset-0 z-[101] hidden bg-black/98 overflow-y-auto backdrop-blur-xl">
+            <div class="min-h-screen flex items-center justify-center p-6">
+                <div class="max-w-3xl w-full py-20">
+                    <button onclick="closeStory()" class="fixed top-8 right-8 text-white/50 hover:text-white text-2xl transition"><i class="fas fa-times"></i></button>
+                    <span id="rs-category" class="text-blue-500 font-black uppercase tracking-[0.3em] text-[10px]"></span>
+                    <h2 id="rs-title" class="text-4xl md:text-6xl font-black mt-4 mb-8 uppercase leading-tight"></h2>
+                    <div id="rs-content" class="story-content text-lg md:text-xl whitespace-pre-wrap"></div>
+                    <div class="mt-20 pt-10 border-t border-white/10 flex justify-between items-center">
+                        <p id="rs-date" class="text-xs opacity-30"></p>
+                        <button onclick="closeStory()" class="text-xs font-bold uppercase tracking-widest text-blue-500">Selesai Membaca</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="pay-modal" class="fixed inset-0 z-[100] hidden bg-black/95 flex items-center justify-center p-6 backdrop-blur-md">
+            <div class="glass max-w-md w-full p-8 rounded-[2rem] relative border-white/10 text-center">
+                <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-500"><i class="fas fa-times"></i></button>
+                <h3 id="m-name" class="text-2xl font-black mb-1 uppercase"></h3>
+                <p id="m-price" class="text-blue-500 font-bold mb-8 text-xl"></p>
+                <div class="bg-white p-3 rounded-2xl mb-8 flex justify-center"><img src="https://files.catbox.moe/nzkt5h.jpg" class="w-44 h-44 object-contain"></div>
                 <button onclick="confirmPayment()" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase">Confirm Payment</button>
             </div>
         </div>
@@ -146,17 +155,17 @@
             if(!input) return Swal.fire('Error', 'Please enter your name!', 'error');
             visitorName = input;
             const cleanName = visitorName.replace(/[.#$[\]]/g, "_"); 
-            const time = new Date().toLocaleString();
             try {
                 const vRes = await fetch(`${dbUrl}visitors/${cleanName}.json`);
                 const vData = await vRes.json();
                 const newCount = (vData ? vData.count : 0) + 1;
-                await fetch(`${dbUrl}visitors/${cleanName}.json`, { method: 'PUT', body: JSON.stringify({ count: newCount, last_access: time }) });
+                await fetch(`${dbUrl}visitors/${cleanName}.json`, { method: 'PUT', body: JSON.stringify({ count: newCount, last_access: new Date().toLocaleString() }) });
             } catch(e) {}
             document.getElementById('login-gate').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             loadData();
-            Swal.fire({ toast: true, position: 'top', title: `Hi ${visitorName}, Welcome!`, showConfirmButton: false, timer: 2000 });
+            loadStories(); // Load cerita saat masuk
+            Swal.fire({ toast: true, position: 'top', title: `Hi ${visitorName}!`, showConfirmButton: false, timer: 2000 });
         }
 
         async function loadData() {
@@ -181,63 +190,144 @@
             }
         }
 
-        // --- UPLOADER FIX (FILE.IO) ---
+        // --- STORY LOGIC (NEW) ---
+        async function loadStories() {
+            const res = await fetch(dbUrl + "stories.json");
+            const data = await res.json();
+            const container = document.getElementById('story-list');
+            container.innerHTML = '';
+            if(!data) {
+                container.innerHTML = '<p class="text-xs opacity-30 uppercase italic">Belum ada cerita...</p>';
+                return;
+            }
+            for(let id in data) {
+                container.innerHTML += `
+                    <div class="glass p-8 rounded-[2.5rem] hover:border-blue-500/50 transition cursor-pointer group" onclick="readStory('${id}')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[9px] font-black bg-blue-600 px-2 py-1 rounded text-white uppercase tracking-widest">${data[id].category}</span>
+                            <button onclick="event.stopPropagation(); deleteStory('${id}')" class="admin-only text-red-500 opacity-50 hover:opacity-100"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase leading-tight group-hover:text-blue-500 transition">${data[id].title}</h3>
+                        <p class="text-xs opacity-40 mt-4 line-clamp-3">${data[id].content}</p>
+                        <div class="mt-6 flex items-center text-[10px] font-bold text-blue-500 uppercase tracking-widest">
+                            Read More <i class="fas fa-arrow-right ml-2 text-[8px]"></i>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        async function addStory() {
+            const { value: v } = await Swal.fire({
+                title: 'Tulis Cerita Baru',
+                background: '#0a0a0a', color: '#fff',
+                html: `
+                    <input id="st-title" class="swal2-input" placeholder="Judul Cerita">
+                    <select id="st-cat" class="swal2-input">
+                        <option value="CERPEN">Cerpen</option>
+                        <option value="CURHATAN">Curhatan</option>
+                        <option value="EDUKASI">Edukasi</option>
+                        <option value="HOROR">Horor</option>
+                    </select>
+                    <textarea id="st-content" class="swal2-textarea" style="height:200px" placeholder="Tulis isi ceritamu di sini..."></textarea>
+                `,
+                preConfirm: () => ({
+                    title: document.getElementById('st-title').value,
+                    category: document.getElementById('st-cat').value,
+                    content: document.getElementById('st-content').value,
+                    date: new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
+                })
+            });
+            if(v && v.title && v.content) {
+                await fetch(dbUrl + "stories.json", { method: 'POST', body: JSON.stringify(v) });
+                loadStories();
+                Swal.fire('Sukses!', 'Cerita berhasil diterbitkan.', 'success');
+            }
+        }
+
+        async function readStory(id) {
+            const res = await fetch(`${dbUrl}stories/${id}.json`);
+            const s = await res.json();
+            document.getElementById('rs-title').innerText = s.title;
+            document.getElementById('rs-category').innerText = s.category;
+            document.getElementById('rs-content').innerText = s.content;
+            document.getElementById('rs-date').innerText = "Diterbitkan pada: " + s.date;
+            document.getElementById('story-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStory() {
+            document.getElementById('story-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        async function deleteStory(id) {
+            if(confirm('Hapus cerita ini?')) {
+                await fetch(`${dbUrl}stories/${id}.json`, { method: 'DELETE' });
+                loadStories();
+            }
+        }
+
+        // --- SYSTEM TOOLS & ADMIN ---
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
             if(!fileInput.files[0]) return;
-            
-            status.innerText = "⏳ Sedang mengunggah... Mohon tunggu.";
+            status.innerText = "⏳ Uploading...";
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
-
             try {
-                const res = await fetch('https://file.io', {
-                    method: 'POST',
-                    body: formData
-                });
+                const res = await fetch('https://file.io', { method: 'POST', body: formData });
                 const data = await res.json();
-                
                 if(data.success) {
-                    const url = data.link;
-                    status.innerHTML = `✅ Sukses: <a href="${url}" target="_blank" class="underline text-blue-400">${url}</a>`;
-                    copy(url);
-                    Swal.fire('Berhasil', 'Link file telah disalin!', 'success');
-                } else {
-                    throw new Error("Gagal");
+                    status.innerHTML = `✅ Link: <a href="${data.link}" target="_blank" class="underline">${data.link}</a>`;
+                    copy(data.link);
                 }
-            } catch(e) { 
-                status.innerText = "❌ Upload gagal. Coba lagi nanti.";
-                Swal.fire('Gagal', 'Terjadi kesalahan pada server uploader.', 'error');
-            }
+            } catch(e) { status.innerText = "❌ Gagal upload."; }
         }
 
         async function downloadVideo() {
             const url = document.getElementById('dl-url').value;
-            if(!url) return Swal.fire('Error', 'Paste the link first!', 'error');
-            Swal.fire({ title: 'Processing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            if(!url) return Swal.fire('Error', 'Link mana?', 'error');
+            Swal.fire({ title: 'Processing...', didOpen: () => Swal.showLoading() });
             try {
-                // Menggunakan API baru yang lebih stabil
                 const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
-                if(data.video || data.data) {
-                    const dl = data.video?.noWatermark || data.data?.video;
-                    window.open(dl);
-                    Swal.fire('Success', 'Download starting...', 'success');
-                } else { throw new Error(); }
-            } catch(e) { Swal.fire('Error', 'Link tidak valid atau server sibuk.', 'error'); }
+                window.open(data.video?.noWatermark || data.data?.video);
+                Swal.close();
+            } catch(e) { Swal.fire('Gagal', 'Server sibuk.', 'error'); }
         }
 
+        function adminLogin() {
+            Swal.fire({ title: 'Password Admin?', input: 'password', background: '#000', color: '#fff' }).then(res => {
+                if(res.value === 'abay123') {
+                    document.body.classList.add('is-admin');
+                    Swal.fire('Welcome Abay!', 'Mode admin aktif.', 'success');
+                    loadStories(); loadData();
+                }
+            });
+        }
+
+        // --- MUSIC & DATA MGT ---
+        async function managePlaylist() {
+            const res = await fetch(dbUrl + "playlist.json");
+            const p = await res.json();
+            let html = '<div class="space-y-2 mb-4 max-h-60 overflow-y-auto text-left">';
+            for(let id in p) { html += `<div class="flex justify-between p-2 bg-white/5 rounded text-[10px]"><span>${p[id].title}</span><button onclick="deleteSong('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`; }
+            Swal.fire({ title: 'Music Playlist', html: html + '<button onclick="addSong()" class="w-full bg-blue-600 py-2 rounded mt-4 text-xs font-bold">ADD NEW SONG</button>', background: '#000', color: '#fff', showConfirmButton: false });
+        }
+        async function addSong() {
+            const { value: v } = await Swal.fire({ title: 'Add MP3', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
+            if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
+        }
+        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
         async function changeMusic() {
             const res = await fetch(dbUrl + "playlist.json");
-            const playlist = await res.json();
-            if(!playlist) return Swal.fire('Info', 'Playlist belum diisi admin.', 'info');
-            let options = {};
-            for(let id in playlist) { options[playlist[id].url] = playlist[id].title; }
-            const { value: url } = await Swal.fire({ title: 'Select Music', input: 'select', inputOptions: options, background: '#000', color: '#fff' });
+            const p = await res.json();
+            let opt = {}; for(let id in p) { opt[p[id].url] = p[id].title; }
+            const { value: url } = await Swal.fire({ title: 'Select Music', input: 'select', inputOptions: opt, background: '#000', color: '#fff' });
             if (url) { audio.src = url; audio.play(); isPlaying = true; document.getElementById('music-icon').className = "fas fa-pause"; }
         }
-
         function toggleMusic() {
             const icon = document.getElementById('music-icon');
             if(isPlaying) { audio.pause(); icon.className = "fas fa-music"; }
@@ -245,60 +335,33 @@
             isPlaying = !isPlaying;
         }
 
-        function adminLogin() {
-            Swal.fire({ title: 'Pass?', input: 'password', background: '#000', color: '#fff' }).then(res => {
-                if(res.value === 'abay123') document.body.classList.add('is-admin');
-            });
-        }
-        async function managePlaylist() {
-            const res = await fetch(dbUrl + "playlist.json");
-            const playlist = await res.json();
-            let html = '<div class="space-y-2 mb-4 max-h-60 overflow-y-auto">';
-            for(let id in playlist) {
-                html += `<div class="flex justify-between p-2 bg-white/5 rounded text-xs"><span>${playlist[id].title}</span><button onclick="deleteSong('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`;
-            }
-            Swal.fire({ title: 'Playlist', html: html + '<button onclick="addSong()" class="w-full bg-blue-600 py-2 rounded mt-2">Add Song</button>', background: '#000', color: '#fff', showConfirmButton: false });
-        }
-        async function addSong() {
-            const { value: v } = await Swal.fire({ title: 'Add Song', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
-            if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
-        }
-        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
-        function startPay(n, p) {
-            currentItem = { n, p };
-            document.getElementById('m-name').innerText = n;
-            document.getElementById('m-price').innerText = "Rp " + p.toLocaleString();
-            document.getElementById('pay-modal').classList.remove('hidden');
-        }
-        async function confirmPayment() {
-            const time = new Date().toLocaleString();
-            await fetch(dbUrl + "sales.json", { method: 'POST', body: JSON.stringify({ item: currentItem.n, price: currentItem.p, date: time, buyer: visitorName }) });
-            window.open(`https://wa.me/6287893344461?text=Konfirmasi: ${currentItem.n} - Rp${currentItem.p.toLocaleString()}`);
-            closeModal();
-        }
+        // --- OTHER ADMIN FUNCTIONS ---
         async function editHero() {
-            const { value: v } = await Swal.fire({ title: 'Edit Profile', html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ek" class="swal2-input" placeholder="Skill"><input id="em" class="swal2-input" placeholder="Link MP3">', preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, alamat: document.getElementById('ea').value, sekolah: document.getElementById('es').value, skill: document.getElementById('ek').value, music: document.getElementById('em').value }) });
+            const { value: v } = await Swal.fire({ title: 'Edit Profile', html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ek" class="swal2-input" placeholder="Skill"><input id="em" class="swal2-input" placeholder="Link MP3 Default">', preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, alamat: document.getElementById('ea').value, sekolah: document.getElementById('es').value, skill: document.getElementById('ek').value, music: document.getElementById('em').value }) });
             if(v) { await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify(v) }); loadData(); }
         }
         async function addProduct() {
             const { value: v } = await Swal.fire({ title: 'New Item', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Gambar"><input id="d" class="swal2-input" placeholder="Deskripsi">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value, document.getElementById('d').value] });
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2], desc: v[3] }) }); loadData(); }
         }
-        async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
         async function showVisitors() {
             const r = await fetch(dbUrl + "visitors.json"); const v = await r.json();
             let html = '<div class="text-left text-xs space-y-2 max-h-96 overflow-y-auto">';
-            for(let name in v) { html += `<div class="p-3 bg-white/5 rounded border border-white/5 flex justify-between"><div><p class="font-bold text-blue-400">${name}</p><p class="opacity-40 text-[9px]">${v[name].last_access}</p></div><div><p class="font-black text-lg">${v[name].count}</p></div></div>`; }
+            for(let name in v) { html += `<div class="p-3 bg-white/5 rounded flex justify-between"><div><p class="font-bold text-blue-500">${name}</p><p class="opacity-30 text-[9px]">${v[name].last_access}</p></div><div class="font-black">${v[name].count}</div></div>`; }
             Swal.fire({ title: 'Visitors', html, background: '#000', color: '#fff' });
         }
         async function showSales() {
             const r = await fetch(dbUrl + "sales.json"); const s = await r.json();
             let html = '<div class="text-left text-[10px] space-y-1">'; let total = 0;
-            if(s) { for(let id in s) { total += parseInt(s[id].price); html += `<div class="p-2 bg-white/5 rounded"><b>${s[id].buyer}</b> - ${s[id].item}</div>`; } }
-            Swal.fire({ title: 'Sales', html: html + `<div class="mt-4 text-xl">Total: Rp ${total.toLocaleString()}</div>`, background: '#000', color: '#fff' });
+            if(s) { for(let id in s) { total += parseInt(s[id].price); html += `<div class="p-2 bg-white/5 rounded"><b>${s[id].buyer}</b> beli ${s[id].item}</div>`; } }
+            Swal.fire({ title: 'Sales Total: Rp ' + total.toLocaleString(), html, background: '#000', color: '#fff' });
         }
+
+        function startPay(n, p) { currentItem = { n, p }; document.getElementById('m-name').innerText = n; document.getElementById('m-price').innerText = "Rp " + p.toLocaleString(); document.getElementById('pay-modal').classList.remove('hidden'); }
+        async function confirmPayment() { await fetch(dbUrl + "sales.json", { method: 'POST', body: JSON.stringify({ item: currentItem.n, price: currentItem.p, date: new Date().toLocaleString(), buyer: visitorName }) }); window.open(`https://wa.me/6287893344461?text=Konfirmasi: ${currentItem.n}`); closeModal(); }
         function closeModal() { document.getElementById('pay-modal').classList.add('hidden'); }
         function copy(t) { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', title: 'Copied!', showConfirmButton: false, timer: 1000 }); }
+        async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
     </script>
 </body>
 </html>
