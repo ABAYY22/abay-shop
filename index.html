@@ -14,11 +14,7 @@
         .admin-only { display: none; }
         .is-admin .admin-only { display: block; }
         #main-content { display: none; } 
-        
-        #login-gate { 
-            position: fixed; inset: 0; z-index: 999; background: #000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+        #login-gate { position: fixed; inset: 0; z-index: 999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
@@ -30,11 +26,8 @@
         <div class="glass p-10 rounded-[3rem] text-center max-w-sm w-full mx-4">
             <h2 class="text-3xl font-black mb-2 tracking-tighter uppercase">Abay Studio</h2>
             <p class="text-xs opacity-50 mb-8 tracking-[0.3em]">IDENTIFICATION REQUIRED</p>
-            <input id="user-input" type="text" placeholder="Enter Your Name..." 
-                   class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl mb-4 text-center focus:outline-none focus:border-blue-500 transition">
-            <button onclick="accessWeb()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-blue-500 transition">
-                Enter Web
-            </button>
+            <input id="user-input" type="text" placeholder="Enter Your Name..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl mb-4 text-center focus:outline-none focus:border-blue-500 transition">
+            <button onclick="accessWeb()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-blue-500 transition">Enter Web</button>
         </div>
     </div>
 
@@ -91,13 +84,13 @@
                     <button onclick="downloadVideo()" class="bg-white text-black w-full py-4 rounded-2xl font-bold uppercase text-xs">Download Now</button>
                 </div>
                 <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter"><i class="fas fa-cloud-upload-alt mr-2"></i> Catbox Uploader</h3>
-                    <p class="text-xs opacity-50 mb-6">Ubah foto/video menjadi link URL secara instan.</p>
-                    <input type="file" id="file-input" class="hidden" onchange="uploadToCatbox()">
+                    <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter"><i class="fas fa-cloud-upload-alt mr-2"></i> File Uploader</h3>
+                    <p class="text-xs opacity-50 mb-6">Ubah file menjadi link URL secara instan.</p>
+                    <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
                     <button onclick="document.getElementById('file-input').click()" id="upload-btn" class="bg-blue-600 w-full py-4 rounded-2xl font-bold uppercase text-xs hover:bg-blue-500 transition">
                         Select & Upload File
                     </button>
-                    <div id="upload-status" class="mt-4 text-center text-xs text-blue-400 font-bold"></div>
+                    <div id="upload-status" class="mt-4 text-center text-xs text-blue-400 font-bold break-all"></div>
                 </div>
             </div>
         </section>
@@ -114,9 +107,7 @@
             <button onclick="toggleMusic()" class="glass w-12 h-12 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition shadow-2xl">
                 <i id="music-icon" class="fas fa-music"></i>
             </button>
-            <button onclick="changeMusic()" class="glass px-4 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-white/10 transition">
-                Change Song
-            </button>
+            <button onclick="changeMusic()" class="glass px-4 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-white/10 transition">Change Song</button>
         </div>
         <audio id="bg-audio" loop></audio>
 
@@ -147,17 +138,21 @@
         const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/";
         let currentItem = {};
         let visitorName = "";
+        let isPlaying = false;
+        const audio = document.getElementById('bg-audio');
 
         async function accessWeb() {
             const input = document.getElementById('user-input').value.trim();
             if(!input) return Swal.fire('Error', 'Please enter your name!', 'error');
             visitorName = input;
             const cleanName = visitorName.replace(/[.#$[\]]/g, "_"); 
-            const vRes = await fetch(`${dbUrl}visitors/${cleanName}.json`);
-            const vData = await vRes.json();
-            const newCount = (vData ? vData.count : 0) + 1;
             const time = new Date().toLocaleString();
-            await fetch(`${dbUrl}visitors/${cleanName}.json`, { method: 'PUT', body: JSON.stringify({ count: newCount, last_access: time }) });
+            try {
+                const vRes = await fetch(`${dbUrl}visitors/${cleanName}.json`);
+                const vData = await vRes.json();
+                const newCount = (vData ? vData.count : 0) + 1;
+                await fetch(`${dbUrl}visitors/${cleanName}.json`, { method: 'PUT', body: JSON.stringify({ count: newCount, last_access: time }) });
+            } catch(e) {}
             document.getElementById('login-gate').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             loadData();
@@ -175,11 +170,7 @@
                 document.getElementById('p-alamat').innerText = h.alamat || '-';
                 document.getElementById('p-sekolah').innerText = h.sekolah || '-';
                 document.getElementById('p-skill').innerText = h.skill || '-';
-                if(h.music) {
-                    const audio = document.getElementById('bg-audio');
-                    audio.src = h.music;
-                    audio.volume = 0.5;
-                }
+                if(h.music) { audio.src = h.music; audio.volume = 0.5; }
             }
             const pRes = await fetch(dbUrl + "products.json");
             const p = await pRes.json();
@@ -190,72 +181,35 @@
             }
         }
 
-        // --- UPDATED: CHANGE MUSIC (USER VIEW) ---
-        async function changeMusic() {
-            const res = await fetch(dbUrl + "playlist.json");
-            const playlist = await res.json();
-            if(!playlist) return Swal.fire('Info', 'Admin belum menambahkan lagu ke playlist.', 'info');
-
-            let options = {};
-            for(let id in playlist) { options[playlist[id].url] = playlist[id].title; }
-
-            const { value: url } = await Swal.fire({
-                title: 'Select Music',
-                input: 'select',
-                inputOptions: options,
-                inputPlaceholder: 'Pilih lagu yang tersedia...',
-                background: '#000', color: '#fff',
-                confirmButtonText: 'Play'
-            });
-
-            if (url) {
-                const audio = document.getElementById('bg-audio');
-                audio.src = url;
-                audio.play();
-                isPlaying = true;
-                document.getElementById('music-icon').className = "fas fa-pause";
-            }
-        }
-
-        // --- NEW: MANAGE PLAYLIST (ADMIN ONLY) ---
-        async function managePlaylist() {
-            const res = await fetch(dbUrl + "playlist.json");
-            const playlist = await res.json();
+        // --- SOLUSI UPLOAD FIX ---
+        async function uploadFile() {
+            const fileInput = document.getElementById('file-input');
+            const status = document.getElementById('upload-status');
+            if(!fileInput.files[0]) return;
             
-            let html = '<div class="space-y-2 mb-4 max-h-60 overflow-y-auto">';
-            if(playlist) {
-                for(let id in playlist) {
-                    html += `<div class="flex justify-between items-center p-2 bg-white/5 rounded-lg text-xs">
-                        <span>${playlist[id].title}</span>
-                        <button onclick="deleteSong('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
-                    </div>`;
+            status.innerText = "⏳ Sedang memproses upload...";
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                // Menggunakan API Pomf2 (Alternatif Catbox yang lebih ramah CORS tanpa proxy ribet)
+                const res = await fetch('https://pomf2.lain.la/upload.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if(data.success) {
+                    const url = data.files[0].url;
+                    status.innerHTML = `✅ Sukses: <a href="${url}" target="_blank" class="underline text-blue-400">${url}</a>`;
+                    copy(url);
+                    Swal.fire('Berhasil', 'Link file telah disalin ke clipboard!', 'success');
+                } else {
+                    throw new Error("Gagal");
                 }
-            } else { html += '<p class="text-xs opacity-50">Playlist kosong.</p>'; }
-            html += '</div>';
-
-            Swal.fire({
-                title: 'Manage Playlist',
-                html: html + '<button onclick="addSong()" class="w-full bg-blue-600 py-2 rounded-lg text-xs font-bold uppercase mt-2">Add New Song</button>',
-                background: '#000', color: '#fff', showConfirmButton: false
-            });
-        }
-
-        async function addSong() {
-            const { value: v } = await Swal.fire({
-                title: 'Add Music', background: '#000', color: '#fff',
-                html: `<input id="stitle" class="swal2-input" placeholder="Judul Lagu"><input id="surl" class="swal2-input" placeholder="Link MP3 (Catbox/Lainnya)">`,
-                preConfirm: () => [document.getElementById('stitle').value, document.getElementById('surl').value]
-            });
-            if(v && v[0] && v[1]) {
-                await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) });
-                managePlaylist();
-            }
-        }
-
-        async function deleteSong(id) {
-            if(confirm('Hapus lagu ini?')) {
-                await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' });
-                managePlaylist();
+            } catch(e) { 
+                status.innerText = "❌ Upload gagal. Server sedang sibuk.";
+                Swal.fire('Gagal', 'Gagal upload. Coba ukuran file lebih kecil.', 'error');
             }
         }
 
@@ -264,52 +218,53 @@
             if(!url) return Swal.fire('Error', 'Paste the link first!', 'error');
             Swal.fire({ title: 'Processing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             try {
-                const res = await fetch(`https://www.tikwm.com/api/?url=${url}`);
+                const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${url}`);
                 const data = await res.json();
-                if(data.data) {
-                    window.open(data.data.play);
+                if(data.video || data.data) {
+                    const dlLink = data.video?.noWatermark || data.data?.video;
+                    window.open(dlLink);
                     Swal.fire('Success', 'Download starting...', 'success');
-                } else { Swal.fire('Error', 'Video not found.', 'error'); }
-            } catch(e) { Swal.fire('Error', 'API Error.', 'error'); }
+                } else { throw new Error(); }
+            } catch(e) { Swal.fire('Error', 'Link tidak valid atau server down.', 'error'); }
         }
 
-        async function uploadToCatbox() {
-            const fileInput = document.getElementById('file-input');
-            const status = document.getElementById('upload-status');
-            if(!fileInput.files[0]) return;
-            status.innerText = "Uploading...";
-            const formData = new FormData();
-            formData.append('reqtype', 'fileupload');
-            formData.append('fileToUpload', fileInput.files[0]);
-            try {
-                const res = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://catbox.moe/user/api.php'), { method: 'POST', body: formData });
-                const url = await res.text();
-                status.innerHTML = `Success: <a href="${url}" target="_blank" class="underline">${url}</a>`;
-                copy(url);
-                Swal.fire('Success', 'Link copied!', 'success');
-            } catch(e) { status.innerText = "Upload failed."; }
+        async function changeMusic() {
+            const res = await fetch(dbUrl + "playlist.json");
+            const playlist = await res.json();
+            if(!playlist) return Swal.fire('Info', 'Playlist kosong.', 'info');
+            let options = {};
+            for(let id in playlist) { options[playlist[id].url] = playlist[id].title; }
+            const { value: url } = await Swal.fire({ title: 'Select Music', input: 'select', inputOptions: options, background: '#000', color: '#fff' });
+            if (url) { audio.src = url; audio.play(); isPlaying = true; document.getElementById('music-icon').className = "fas fa-pause"; }
         }
 
-        async function showVisitors() {
-            const r = await fetch(dbUrl + "visitors.json");
-            const v = await r.json();
-            let html = '<div class="text-left text-xs space-y-2 max-h-96 overflow-y-auto">';
-            for(let name in v) {
-                html += `<div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center"><div><p class="font-bold text-blue-400">${name.replace(/_/g, " ")}</p><p class="opacity-40 text-[9px] uppercase">${v[name].last_access}</p></div><div class="text-right"><p class="text-[9px] opacity-40 uppercase">Visits</p><p class="font-black text-lg">${v[name].count}</p></div></div>`;
-            }
-            html += '</div>';
-            Swal.fire({ title: 'Visitor Tracking', html, background: '#000', color: '#fff' });
-        }
-
-        const audio = document.getElementById('bg-audio');
-        let isPlaying = false;
         function toggleMusic() {
             const icon = document.getElementById('music-icon');
             if(isPlaying) { audio.pause(); icon.className = "fas fa-music"; }
-            else { audio.play().catch(e => Swal.fire('Info', 'Pilih lagu dulu melalui "Change Song"', 'info')); icon.className = "fas fa-pause"; }
+            else { audio.play().catch(() => {}); icon.className = "fas fa-pause"; }
             isPlaying = !isPlaying;
         }
 
+        // --- FUNGSI ADMIN & LAINNYA ---
+        function adminLogin() {
+            Swal.fire({ title: 'Pass?', input: 'password', background: '#000', color: '#fff' }).then(res => {
+                if(res.value === 'abay123') document.body.classList.add('is-admin');
+            });
+        }
+        async function managePlaylist() {
+            const res = await fetch(dbUrl + "playlist.json");
+            const playlist = await res.json();
+            let html = '<div class="space-y-2 mb-4 max-h-60 overflow-y-auto">';
+            for(let id in playlist) {
+                html += `<div class="flex justify-between p-2 bg-white/5 rounded text-xs"><span>${playlist[id].title}</span><button onclick="deleteSong('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`;
+            }
+            Swal.fire({ title: 'Playlist', html: html + '<button onclick="addSong()" class="w-full bg-blue-600 py-2 rounded mt-2">Add Song</button>', background: '#000', color: '#fff', showConfirmButton: false });
+        }
+        async function addSong() {
+            const { value: v } = await Swal.fire({ title: 'Add Song', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
+            if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
+        }
+        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
         function startPay(n, p) {
             currentItem = { n, p };
             document.getElementById('m-name').innerText = n;
@@ -319,34 +274,18 @@
         async function confirmPayment() {
             const time = new Date().toLocaleString();
             await fetch(dbUrl + "sales.json", { method: 'POST', body: JSON.stringify({ item: currentItem.n, price: currentItem.p, date: time, buyer: visitorName }) });
-            window.open(`https://wa.me/6287893344461?text=Halo Mas Abay! Konfirmasi Bayar: ${currentItem.n} - Rp${currentItem.p.toLocaleString()} - User: ${visitorName}`);
+            window.open(`https://wa.me/6287893344461?text=Halo Abay! Konfirmasi: ${currentItem.n} - Rp${currentItem.p.toLocaleString()}`);
             closeModal();
         }
-        function adminLogin() {
-            Swal.fire({ title: 'Pass?', input: 'password', background: '#000', color: '#fff' }).then(res => {
-                if(res.value === 'abay123') document.body.classList.add('is-admin');
-            });
-        }
         async function editHero() {
-            const { value: v } = await Swal.fire({
-                title: 'Edit Profile', background: '#000', color: '#fff',
-                html: `<input id="enama" class="swal2-input" placeholder="Nama"><input id="ebio" class="swal2-input" placeholder="Bio"><input id="efoto" class="swal2-input" placeholder="Foto URL"><input id="ehobi" class="swal2-input" placeholder="Hobi"><input id="ealamat" class="swal2-input" placeholder="Alamat"><input id="esekolah" class="swal2-input" placeholder="Sekolah"><input id="eskill" class="swal2-input" placeholder="Skill"><input id="emusic" class="swal2-input" placeholder="Default Music URL">`,
-                preConfirm: () => ({ nama: document.getElementById('enama').value, bio: document.getElementById('ebio').value, foto: document.getElementById('efoto').value, hobi: document.getElementById('ehobi').value, alamat: document.getElementById('ealamat').value, sekolah: document.getElementById('esekolah').value, skill: document.getElementById('eskill').value, music: document.getElementById('emusic').value })
-            });
+            const { value: v } = await Swal.fire({ title: 'Edit Profile', html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ek" class="swal2-input" placeholder="Skill"><input id="em" class="swal2-input" placeholder="Link MP3">', preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, alamat: document.getElementById('ea').value, sekolah: document.getElementById('es').value, skill: document.getElementById('ek').value, music: document.getElementById('em').value }) });
             if(v) { await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify(v) }); loadData(); }
         }
         async function addProduct() {
-            const { value: v } = await Swal.fire({ title: 'New Item', background: '#000', color: '#fff', html: '<input id="n" class="swal2-input" placeholder="Name"><input id="p" class="swal2-input" type="number" placeholder="Price"><input id="i" class="swal2-input" placeholder="Img URL"><input id="d" class="swal2-input" placeholder="Desc">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value, document.getElementById('d').value] });
+            const { value: v } = await Swal.fire({ title: 'New Item', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Gambar"><input id="d" class="swal2-input" placeholder="Deskripsi">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value, document.getElementById('d').value] });
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2], desc: v[3] }) }); loadData(); }
         }
-        async function delProduct(id) { if(confirm('Delete?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
-        async function showSales() {
-            const r = await fetch(dbUrl + "sales.json"); const s = await r.json();
-            let html = '<div class="text-left text-[10px] space-y-1">'; let total = 0;
-            if(s) { for(let id in s) { total += parseInt(s[id].price); html += `<div class="p-2 bg-white/5 rounded"><b>${s[id].buyer}</b> bought <b>${s[id].item}</b></div>`; } }
-            html += `</div><div class="mt-4 text-xl font-bold">Total: Rp ${total.toLocaleString()}</div>`;
-            Swal.fire({ title: 'Sales', html, background: '#000', color: '#fff' });
-        }
+        async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
         function closeModal() { document.getElementById('pay-modal').classList.add('hidden'); }
         function copy(t) { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', title: 'Copied!', showConfirmButton: false, timer: 1000 }); }
     </script>
