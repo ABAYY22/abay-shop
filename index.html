@@ -21,6 +21,7 @@
             margin: 0; padding: 0; min-height: 100vh;
             background-color: #f1f5f9;
             background-size: cover; background-position: center; background-attachment: fixed;
+            transition: background 0.5s ease;
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
@@ -37,7 +38,7 @@
             border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--primary);
         }
 
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; font-family: inherit; }
 
         .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; }
         
@@ -83,17 +84,27 @@
 
 <div class="container">
     <header>
-        <h1>🌀Abay Shop</h1>
+        <h1>💎 Abay Premium</h1>
         <button class="btn" onclick="toggleAdmin()" style="background:#475569">Admin</button>
     </header>
 
     <div id="adminPanel">
-        <h3>⚙️ Tambah Produk</h3>
+        <h3>⚙️ Pengaturan Admin</h3>
+        
+        <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+            <label>Link Background (Catbox/ImgBB):</label>
+            <input type="text" id="bgUrl" placeholder="https://files.catbox.moe/xxx.jpg">
+            <button class="btn" onclick="updateBg()" style="background: #22c55e; width: 100%;">Ganti Background Website</button>
+        </div>
+
+        <hr style="opacity: 0.2; margin: 20px 0;">
+
+        <h4>Tambah Produk</h4>
         <input type="text" id="pName" placeholder="Nama Produk">
         <input type="number" id="pPrice" placeholder="Harga">
-        <input type="text" id="pImg" placeholder="Link Foto (Catbox/ImgBB)">
+        <input type="text" id="pImg" placeholder="Link Foto Produk">
         <textarea id="pBenefit" rows="3" placeholder="Benefit (Gunakan Enter untuk baris baru)"></textarea>
-        <button class="btn" onclick="tambahProduk()" style="width:100%">Upload</button>
+        <button class="btn" onclick="tambahProduk()" style="width:100%">Upload Produk</button>
     </div>
 
     <div class="grid" id="etalase"></div>
@@ -114,11 +125,11 @@
 
 <script>
     // --- PENGATURAN UTAMA ---
-    const DB_URL = "https://toko-49a45-default-rtdb.firebaseio.com/";
-    const NOMOR_WA = "6287893344461"; // Ganti nomor kamu
-    const NO_DANA = "087893344461";   // Nomor DANA kamu
-    const NO_GOPAY = "087893344461";  // Nomor Gopay kamu
-    const LINK_QRIS = "https://files.catbox.moe/nzkt5h.jpg"; // Link gambar QRIS kamu
+    const DB_URL = "https://toko-49a45-default-rtdb.firebaseio.com/:";
+    const NOMOR_WA = "6287893344461"; 
+    const NO_DANA = "087893344461";   
+    const NO_GOPAY = "087893344461";  
+    const LINK_QRIS = "https://files.catbox.moe/nzkt5h.jpg"; 
 
     let isAdmin = false;
 
@@ -128,6 +139,15 @@
             document.getElementById('adminPanel').style.display = 'block';
             muatData();
         }
+    }
+
+    // Fungsi Baru: Update Background
+    async function updateBg() {
+        const url = document.getElementById('bgUrl').value;
+        if(!url) return alert("Masukkan link gambar!");
+        await fetch(`${DB_URL}/config.json`, { method: 'PATCH', body: JSON.stringify({ bg: url }) });
+        alert("Background Berhasil Diubah!");
+        muatData();
     }
 
     async function tambahProduk() {
@@ -148,7 +168,6 @@
         }
     }
 
-    // Fungsi Pop Up Modal
     function openModal(method, productName, productPrice) {
         const modal = document.getElementById('paymentModal');
         const title = document.getElementById('modalTitle');
@@ -168,7 +187,6 @@
             target.innerHTML = `<img src="${LINK_QRIS}" style="width:100%; border-radius:10px;">`;
         }
 
-        // Setting Link WA saat tombol konfirmasi diklik
         confirmBtn.onclick = () => {
             const text = `*KONFIRMASI PEMBAYARAN*\n-----------\n📦 *Produk:* ${productName}\n💰 *Harga:* Rp ${Number(productPrice).toLocaleString()}\n💳 *Metode:* ${method}\n\nSaya sudah melakukan transfer, mohon diproses Min!`;
             window.open(`https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(text)}`, '_blank');
@@ -180,32 +198,40 @@
     }
 
     async function muatData() {
-        const res = await fetch(`${DB_URL}/.json`);
-        const data = await res.json();
-        const etalase = document.getElementById('etalase');
-        etalase.innerHTML = "";
-        
-        if(data?.produk) {
-            Object.keys(data.produk).forEach(id => {
-                const p = data.produk[id];
-                etalase.innerHTML += `
-                    <div class="card">
-                        ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
-                        <img src="${p.foto}" onerror="this.src='https://placehold.co/400x300?text=Gambar+Rusak'">
-                        <div class="card-body">
-                            <span class="card-title">${p.nama}</span>
-                            <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
-                            <div class="benefit-box"><strong>Benefit:</strong><br>${p.benefit ? p.benefit.replace(/\n/g, '<br>') : '-'}</div>
-                            
-                            <div class="pay-group">
-                                <button class="btn-pay btn-dana" onclick="openModal('DANA', '${p.nama}', '${p.harga}')">Bayar via DANA</button>
-                                <button class="btn-pay btn-gopay" onclick="openModal('GOPAY', '${p.nama}', '${p.harga}')">Bayar via GOPAY</button>
-                                <button class="btn-pay btn-qr" onclick="openModal('QRIS', '${p.nama}', '${p.harga}')">Bayar via QRIS</button>
+        try {
+            const res = await fetch(`${DB_URL}/.json`);
+            const data = await res.json();
+
+            // Load Background dari Cloud
+            if(data?.config?.bg) {
+                document.body.style.backgroundImage = `url('${data.config.bg}')`;
+            }
+
+            const etalase = document.getElementById('etalase');
+            etalase.innerHTML = "";
+            
+            if(data?.produk) {
+                Object.keys(data.produk).forEach(id => {
+                    const p = data.produk[id];
+                    etalase.innerHTML += `
+                        <div class="card">
+                            ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
+                            <img src="${p.foto}" onerror="this.src='https://placehold.co/400x300?text=Gambar+Rusak'">
+                            <div class="card-body">
+                                <span class="card-title">${p.nama}</span>
+                                <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
+                                <div class="benefit-box"><strong>Benefit:</strong><br>${p.benefit ? p.benefit.replace(/\n/g, '<br>') : '-'}</div>
+                                
+                                <div class="pay-group">
+                                    <button class="btn-pay btn-dana" onclick="openModal('DANA', '${p.nama}', '${p.harga}')">Bayar via DANA</button>
+                                    <button class="btn-pay btn-gopay" onclick="openModal('GOPAY', '${p.nama}', '${p.harga}')">Bayar via GOPAY</button>
+                                    <button class="btn-pay btn-qr" onclick="openModal('QRIS', '${p.nama}', '${p.harga}')">Bayar via QRIS</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-            });
-        }
+                        </div>`;
+                });
+            }
+        } catch (e) { console.log("Error muat data:", e); }
     }
 
     muatData();
