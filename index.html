@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Online Publik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.9);
+            --primary: #4f46e5;
+            --dark: #1e293b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0; padding: 0; min-height: 100vh;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            background-color: #667eea; /* Fallback color */
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        header {
+            background: var(--glass); backdrop-filter: blur(10px);
+            padding: 15px 20px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); margin-bottom: 30px;
+        }
+
+        #adminPanel {
+            display: none; background: white; padding: 25px;
+            border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--primary);
+        }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; }
+
+        /* Grid Produk */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-body { padding: 15px; text-align: center; }
+        .card-price { color: var(--primary); font-weight: bold; }
+
+        .btn-del { position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>✨ Toko Online</h1>
+        <button class="btn" onclick="toggleAdmin()" style="background:#64748b">Admin</button>
+    </header>
+
+    <div id="adminPanel">
+        <h3>⚙️ Panel Admin (Cloud)</h3>
+        <label>Link Background (Catbox/ImgBB):</label>
+        <input type="text" id="bgUrl" placeholder="https://h.uguu.se/WmFVGYqZ.mp4">
+        <button class="btn" onclick="updateBg()">Update Background</button>
+        <hr>
+        <h4>Tambah Produk</h4>
+        <input type="text" id="pName" placeholder="Nama Barang">
+        <input type="number" id="pPrice" placeholder="Harga">
+        <input type="text" id="pImg" placeholder="Link Foto (Catbox/ImgBB)">
+        <button class="btn" onclick="tambahProduk()" style="width:100%">Simpan ke Cloud</button>
+    </div>
+
+    <div class="grid" id="etalase">
+        </div>
+</div>
+
+<script>
+    // MASUKKAN LINK DATABASE FIREBASE ANDA DI SINI
+    const DB_URL = "https://console.firebase.google.com/u/0/project/toko-49a45/overview";
+    let isAdmin = false;
+
+    function toggleAdmin() {
+        if(prompt("Password:") === "123") {
+            isAdmin = true;
+            document.getElementById('adminPanel').style.display = 'block';
+            muatData();
+        }
+    }
+
+    async function updateBg() {
+        const url = document.getElementById('bgUrl').value;
+        await fetch(`${DB_URL}/config.json`, { method: 'PATCH', body: JSON.stringify({ bg: url }) });
+        alert("Background Terupdate!");
+        muatData();
+    }
+
+    async function tambahProduk() {
+        const item = {
+            nama: document.getElementById('pName').value,
+            harga: document.getElementById('pPrice').value,
+            foto: document.getElementById('pImg').value
+        };
+        await fetch(`${DB_URL}/produk.json`, { method: 'POST', body: JSON.stringify(item) });
+        alert("Produk Berhasil Online!");
+        muatData();
+    }
+
+    async function hapus(id) {
+        if(confirm("Hapus?")) {
+            await fetch(`${DB_URL}/produk/${id}.json`, { method: 'DELETE' });
+            muatData();
+        }
+    }
+
+    async function muatData() {
+        const res = await fetch(`${DB_URL}/.json`);
+        const data = await res.json();
+
+        // Terapkan Background ke semua orang
+        if(data?.config?.bg) {
+            document.body.style.backgroundImage = `url('${data.config.bg}')`;
+        }
+
+        // Tampilkan Produk ke semua orang
+        const etalase = document.getElementById('etalase');
+        etalase.innerHTML = "";
+        
+        if(data?.produk) {
+            Object.keys(data.produk).forEach(id => {
+                const p = data.produk[id];
+                etalase.innerHTML += `
+                    <div class="card">
+                        ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
+                        <img src="${p.foto}">
+                        <div class="card-body">
+                            <strong>${p.nama}</strong><br>
+                            <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
+                        </div>
+                    </div>`;
+            });
+        }
+    }
+
+    muatData();
+</script>
+</body>
+</html>
