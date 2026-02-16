@@ -20,6 +20,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .story-body { line-height: 1.8; letter-spacing: 0.02em; }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -82,13 +83,20 @@
         <div id="shop" class="tab-content">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-black uppercase italic tracking-tighter">Marketplace</h2>
-                <div class="flex gap-2">
-                    <button onclick="addProduct()" class="admin-only bg-green-600 px-4 py-2 rounded-xl text-[10px] font-bold">ADD ITEM</button>
-                </div>
+                <button onclick="addProduct()" class="admin-only bg-green-600 px-4 py-2 rounded-xl text-[10px] font-bold">ADD ITEM</button>
             </div>
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
     </main>
+
+    <div id="story-modal" class="fixed inset-0 z-[100] hidden bg-black/98 overflow-y-auto px-6 py-20 backdrop-blur-2xl">
+        <div class="max-w-2xl mx-auto">
+            <button onclick="closeStory()" class="fixed top-8 right-8 text-white/50 text-2xl hover:text-white"><i class="fas fa-times"></i></button>
+            <span id="rs-category" class="text-blue-500 font-black text-[10px] tracking-[0.3em] uppercase"></span>
+            <h2 id="rs-title" class="text-4xl md:text-5xl font-black mt-4 mb-10 leading-tight uppercase italic"></h2>
+            <div id="rs-content" class="text-gray-300 leading-relaxed text-lg whitespace-pre-wrap story-body"></div>
+        </div>
+    </div>
 
     <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 glass px-8 py-4 rounded-full z-[100] border border-white/20">
         <button onclick="toggleMusic()" class="text-white hover:text-blue-500 transition w-6"><i id="music-icon" class="fas fa-play"></i></button>
@@ -158,8 +166,8 @@
                     Swal.fire('Berhasil!', 'File tersimpan di cloud.', 'success');
                 } else { throw new Error(); }
             } catch(e) {
-                status.innerHTML = "❌ Gagal. Coba file yang lebih kecil.";
-                Swal.fire('Error', 'Server sibuk, coba lagi nanti.', 'error');
+                status.innerHTML = "❌ Gagal mengunggah.";
+                Swal.fire('Error', 'Coba lagi nanti.', 'error');
             } finally { btn.disabled = false; }
         }
 
@@ -168,7 +176,6 @@
             if(!url) return Swal.fire('Oops!', 'Tempel link dulu!', 'warning');
             Swal.fire({ title: 'Mencari Video...', didOpen: () => Swal.showLoading() });
             try {
-                // Gunakan Tiklydown API yang lebih reliable untuk TikTok
                 const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
                 const videoUrl = data.video?.noWatermark || data.video?.url || data.video;
@@ -177,14 +184,13 @@
                     Swal.fire('Berhasil!', 'Video ditemukan.', 'success');
                 } else { throw new Error(); }
             } catch(e) {
-                Swal.fire('Gagal', 'Link tidak didukung atau video bersifat privat.', 'error');
+                Swal.fire('Gagal', 'Link tidak valid atau privat.', 'error');
             }
         }
 
         function choosePayment(name, price) {
             Swal.fire({
                 title: 'Pilih Metode Bayar',
-                text: `Item: ${name} (Rp ${price.toLocaleString()})`,
                 background: '#0a0a0a',
                 color: '#fff',
                 showCancelButton: true,
@@ -198,29 +204,16 @@
             }).then((result) => {
                 let method = "";
                 let payContent = "";
-
                 if (result.isConfirmed) {
                     method = "DANA";
-                    payContent = `<div class="p-4 bg-blue-600/20 border border-blue-500 rounded-xl">
-                                    <p class="text-lg font-bold">SILAKAN TRANSFER KE:</p>
-                                    <p class="text-2xl font-black mt-2 tracking-widest text-blue-400">087893344461</p>
-                                    <p class="text-xs mt-2 opacity-50">A/N ABAY STUDIO</p>
-                                  </div>`;
+                    payContent = `<div class="p-4 bg-blue-600/20 border border-blue-500 rounded-xl"><p class="text-lg font-bold">TRANSFER DANA KE:</p><p class="text-2xl font-black mt-2 tracking-widest text-blue-400">087893344461</p><p class="text-xs mt-2 opacity-50">A/N ABAY STUDIO</p></div>`;
                 } else if (result.isDenied) {
                     method = "GOPAY";
-                    payContent = `<div class="p-4 bg-green-600/20 border border-green-500 rounded-xl">
-                                    <p class="text-lg font-bold">SILAKAN TRANSFER KE:</p>
-                                    <p class="text-2xl font-black mt-2 tracking-widest text-green-400">087893344461</p>
-                                    <p class="text-xs mt-2 opacity-50">A/N ABAY STUDIO</p>
-                                  </div>`;
+                    payContent = `<div class="p-4 bg-green-600/20 border border-green-500 rounded-xl"><p class="text-lg font-bold">TRANSFER GOPAY KE:</p><p class="text-2xl font-black mt-2 tracking-widest text-green-400">087893344461</p><p class="text-xs mt-2 opacity-50">A/N ABAY STUDIO</p></div>`;
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     method = "QRIS";
-                    payContent = `<div class="bg-white p-4 rounded-xl flex flex-col items-center">
-                                    <img src="https://files.catbox.moe/nzkt5h.jpg" class="w-48 h-auto">
-                                    <p class="text-black text-[10px] mt-2 font-bold uppercase">Scan QR di Atas</p>
-                                  </div>`;
+                    payContent = `<div class="bg-white p-4 rounded-xl flex flex-col items-center"><img src="https://files.catbox.moe/nzkt5h.jpg" class="w-48 h-auto"><p class="text-black text-[10px] mt-2 font-bold uppercase">Scan QR Code</p></div>`;
                 }
-
                 if(method) {
                     Swal.fire({
                         title: 'Pembayaran ' + method,
@@ -230,20 +223,47 @@
                         confirmButtonText: 'SAYA SUDAH BAYAR',
                         confirmButtonColor: '#2563eb'
                     }).then(() => {
-                        const waMsg = `Halo Abay! Konfirmasi Pembayaran:\n\n` +
-                                     `🛒 Item: ${name}\n` +
-                                     `💰 Harga: Rp ${price.toLocaleString()}\n` +
-                                     `💳 Metode: ${method}\n\n` +
-                                     `Saya sudah membayar, tolong kirimkan barangnya!`;
+                        const waMsg = `Halo Abay! Konfirmasi Pembayaran:\n🛒 Item: ${name}\n💰 Harga: Rp ${price.toLocaleString()}\n💳 Metode: ${method}\n\nSaya sudah bayar, tolong diproses!`;
                         window.open(`https://wa.me/6287893344461?text=${encodeURIComponent(waMsg)}`);
                     });
                 }
             });
         }
 
+        async function loadStories() {
+            const res = await fetch(dbUrl + "stories.json");
+            const data = await res.json();
+            const container = document.getElementById('story-list');
+            container.innerHTML = '';
+            for(let id in data) {
+                container.innerHTML += `<div class="glass p-6 rounded-[2rem] hover:border-white/30 transition cursor-pointer" onclick="readStory('${id}')">
+                    <span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest">${data[id].category}</span>
+                    <h3 class="font-bold uppercase mt-2 line-clamp-2">${data[id].title}</h3>
+                    <p class="text-[10px] opacity-40 mt-3 line-clamp-2">${data[id].content}</p>
+                    <button onclick="event.stopPropagation(); deleteStory('${id}')" class="admin-only mt-4 text-red-500 text-[9px] uppercase font-bold">Hapus</button>
+                </div>`;
+            }
+        }
+
+        async function readStory(id) {
+            const res = await fetch(`${dbUrl}stories/${id}.json`);
+            const s = await res.json();
+            document.getElementById('rs-title').innerText = s.title;
+            document.getElementById('rs-category').innerText = s.category;
+            document.getElementById('rs-content').innerText = s.content;
+            document.getElementById('story-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStory() {
+            document.getElementById('story-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- ADMIN FUNCTIONS ---
         function adminLogin() {
             Swal.fire({ title: 'Password Admin?', input: 'password', background: '#0a0a0a', color: '#fff' }).then(res => {
-                if(res.value === 'abay123') { document.body.classList.add('is-admin'); Swal.fire('Akses Diterima', '', 'success'); }
+                if(res.value === 'abay123') { document.body.classList.add('is-admin'); Swal.fire('Akses Admin Aktif', '', 'success'); }
             });
         }
         function toggleMusic() {
@@ -262,19 +282,17 @@
             const { value: v } = await Swal.fire({ title: 'Edit Profile', background: '#0a0a0a', color: '#fff', html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ek" class="swal2-input" placeholder="Skill"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="em" class="swal2-input" placeholder="Music URL">', preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, skill: document.getElementById('ek').value, sekolah: document.getElementById('es').value, alamat: document.getElementById('ea').value, music: document.getElementById('em').value }) });
             if(v) { await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify(v) }); loadData(); }
         }
+        async function addStory() {
+            const { value: v } = await Swal.fire({ title: 'Tulis Cerita', background: '#0a0a0a', color: '#fff', html: '<input id="st-t" class="swal2-input" placeholder="Judul"><select id="st-c" class="swal2-input"><option value="CERPEN">Cerpen</option><option value="DEVLOG">DevLog</option><option value="RANDOM">Random</option></select><textarea id="st-x" class="swal2-textarea" placeholder="Isi cerita..."></textarea>', preConfirm: () => ({ title: document.getElementById('st-t').value, category: document.getElementById('st-c').value, content: document.getElementById('st-x').value }) });
+            if(v && v.title) { await fetch(dbUrl + "stories.json", { method: 'POST', body: JSON.stringify(v) }); loadStories(); }
+        }
         async function addProduct() {
             const { value: v } = await Swal.fire({ title: 'Add Item', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Image URL">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value] });
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2] }) }); loadData(); }
         }
-        async function loadStories() {
-            const res = await fetch(dbUrl + "stories.json"); const data = await res.json();
-            const container = document.getElementById('story-list'); container.innerHTML = '';
-            for(let id in data) { container.innerHTML += `<div class="glass p-6 rounded-[2rem] cursor-pointer" onclick="readStory('${id}')"><span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest">${data[id].category}</span><h3 class="font-bold uppercase mt-2">${data[id].title}</h3><p class="text-[10px] opacity-40 mt-3 line-clamp-2">${data[id].content}</p><button onclick="event.stopPropagation(); deleteStory('${id}')" class="admin-only mt-4 text-red-500 text-[9px] uppercase font-bold">Hapus</button></div>`; }
-        }
-        async function readStory(id) {
-            const res = await fetch(`${dbUrl}stories/${id}.json`); const s = await res.json();
-            Swal.fire({ title: s.title, text: s.content, background: '#0a0a0a', color: '#fff' });
-        }
+        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
+        async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
+        async function deleteStory(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}stories/${id}.json`, { method: 'DELETE' }); loadStories(); } }
         async function managePlaylist() {
             const res = await fetch(dbUrl + "playlist.json"); const p = await res.json();
             let html = '<div class="space-y-2">';
@@ -285,9 +303,6 @@
             const { value: v } = await Swal.fire({ title: 'New Song', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
             if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
         }
-        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
-        async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
-        async function deleteStory(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}stories/${id}.json`, { method: 'DELETE' }); loadStories(); } }
     </script>
 </body>
 </html>
