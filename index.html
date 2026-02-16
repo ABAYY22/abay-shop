@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-card: rgba(255, 255, 255, 0.7);
+            --primary: #4f46e5;
+            --dark: #1e293b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            /* Background Default (Sebelum diganti) */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--dark);
+        }
+
+        /* Container Utama */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Transparan */
+        header {
+            background: var(--glass);
+            backdrop-filter: blur(10px); /* Efek Blur */
+            padding: 15px 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+
+        /* Tombol Keren */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6); }
+        .btn-danger { background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+        .btn-secondary { background: #64748b; box-shadow: none; }
+
+        /* Panel Admin */
+        #adminPanel {
+            display: none;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: slideDown 0.5s ease;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
+            box-sizing: border-box;
+        }
+
+        /* Grid Produk */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        /* Kartu Produk */
+        .card {
+            background: var(--glass-card);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.9); }
+        
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card-body { padding: 15px; }
+        .card-title { font-weight: 600; margin-bottom: 5px; display: block; }
+        .card-price { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
+        
+        /* Tombol Hapus Kecil */
+        .btn-del-mini {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(255,0,0,0.8);
+            color: white; border: none;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+        }
+
+        /* Animasi */
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>✨ Toko Saya</h1>
+            <small style="opacity: 0.7;">Belanja Mudah & Hemat</small>
+        </div>
+        <button class="btn btn-secondary" onclick="toggleAdmin()">Admin</button>
+    </header>
+
+    <div id="adminPanel">
+        <h3 style="margin-top:0">⚙️ Pengaturan Admin</h3>
+        
+        <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <label>Ganti Background Website:</label>
+            <input type="file" id="bgInput" accept="image/*" onchange="gantiBackground()">
+            <small>Pilih foto landscape (mendatar) agar bagus.</small>
+            <br><br>
+            <button class="btn btn-secondary" onclick="resetBackground()" style="font-size: 0.8rem;">Reset ke Asli</button>
+        </div>
+
+        <hr style="opacity: 0.3;">
+
+        <h4>Tambah Produk Baru</h4>
+        <div class="input-group">
+            <input type="text" id="pName" placeholder="Nama Barang (Cth: Sepatu Nike)">
+        </div>
+        <div class="input-group">
+            <input type="number" id="pPrice" placeholder="Harga (Cth: 150000)">
+        </div>
+        <div class="input-group">
+            <label>Foto Produk:</label>
+            <input type="file" id="pImage" accept="image/*">
+        </div>
+        <button class="btn" onclick="tambahProduk()" style="width: 100%;">+ Upload Produk</button>
+        <button class="btn btn-danger" onclick="logout()" style="width: 100%; margin-top: 10px;">Keluar Admin</button>
+    </div>
+
+    <div class="grid" id="etalase">
+        </div>
+</div>
+
+<script>
+    let isAdmin = false;
+
+    // --- FITUR BACKGROUND ---
+    function loadBackground() {
+        const savedBg = localStorage.getItem('toko_bg');
+        if (savedBg) {
+            document.body.style.backgroundImage = `url('${savedBg}')`;
+        }
+    }
+
+    function gantiBackground() {
+        const file = document.getElementById('bgInput').files[0];
+        if(!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const bgUrl = e.target.result;
+            document.body.style.backgroundImage = `url('${bgUrl}')`;
+            localStorage.setItem('toko_bg', bgUrl); // Simpan permanen
+        }
+        reader.readAsDataURL(file);
+    }
+
+    function resetBackground() {
+        localStorage.removeItem('toko_bg');
+        document.body.style.backgroundImage = ''; // Kembali ke CSS default
+    }
+
+    // --- FITUR PRODUK ---
+    function toggleAdmin() {
+        if (!isAdmin) {
+            const pass = prompt("Password Admin:");
+            if (pass === "12345") { // Password default
+                isAdmin = true;
+                document.getElementById('adminPanel').style.display = 'block';
+                renderProduk(); // Refresh tombol hapus
+            } else {
+                alert("Password Salah!");
+            }
+        } else {
+            // Jika sudah login, tombol ini scroll ke atas saja
+            document.getElementById('adminPanel').scrollIntoView({behavior: "smooth"});
+        }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.getElementById('adminPanel').style.display = 'none';
+        renderProduk();
+    }
+
+    function tambahProduk() {
+        const name = document.getElementById('pName').value;
+        const price = document.getElementById('pPrice').value;
+        const imgInput = document.getElementById('pImage');
+        
+        if (!name || !price || !imgInput.files[0]) return alert("Data belum lengkap!");
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const produk = {
+                id: Date.now(),
+                nama: name,
+                harga: price,
+                foto: e.target.result
+            };
+            
+            let data = JSON.parse(localStorage.getItem('toko_data')) || [];
+            data.push(produk);
+            localStorage.setItem('toko_data', JSON.stringify(data));
+            
+            // Reset & Render
+            imgInput.value = '';
+            document.getElementById('pName').value = '';
+            document.getElementById('pPrice').value = '';
+            renderProduk();
+        }
+        reader.readAsDataURL(imgInput.files[0]);
+    }
+
+    function hapusProduk(id) {
+        if(confirm("Yakin hapus produk ini?")) {
+            let data = JSON.parse(localStorage.getItem('toko_data')) || [];
+            data = data.filter(item => item.id !== id);
+            localStorage.setItem('toko_data', JSON.stringify(data));
+            renderProduk();
+        }
+    }
+
+    function renderProduk() {
+        const container = document.getElementById('etalase');
+        const data = JSON.parse(localStorage.getItem('toko_data')) || [];
+        
+        if(data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; width:100%; color:white; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;">Belum ada produk. Silakan login admin.</p>';
+            return;
+        }
+
+        container.innerHTML = data.map(p => `
+            <div class="card">
+                <button class="btn-del-mini" style="display: ${isAdmin ? 'block' : 'none'}" onclick="hapusProduk(${p.id})">×</button>
+                <img src="${p.foto}" alt="${p.nama}">
+                <div class="card-body">
+                    <span class="card-title">${p.nama}</span>
+                    <span class="card-price">Rp ${Number(p.harga).toLocaleString('id-ID')}</span>
+                    <br>
+                    <a href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20beli%20${p.nama}" target="_blank" 
+                       style="display:block; text-align:center; background:#25d366; color:white; text-decoration:none; padding:5px; border-radius:5px; margin-top:10px; font-size:0.9rem;">
+                       Beli via WA
+                    </a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Jalankan saat pertama kali dibuka
+    loadBackground(); // Cek background tersimpan
+    renderProduk();   // Tampilkan produk
+</script>
+
+</body>
+</html>
