@@ -3,238 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abay Premium Store - Payment System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <title>Abay Studio | All-in-One</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.95);
-            --primary: #6366f1;
-            --wa-green: #25d366;
-            --dana: #008ced;
-            --gopay: #00aade;
-            --dark: #0f172a;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0; padding: 0; min-height: 100vh;
-            background-color: #f1f5f9;
-            background-size: cover; background-position: center; background-attachment: fixed;
-            transition: background 0.5s ease;
-        }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-
-        header {
-            background: var(--glass); backdrop-filter: blur(10px);
-            padding: 15px 20px; border-radius: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px;
-        }
-
-        #adminPanel {
-            display: none; background: white; padding: 25px;
-            border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--primary);
-        }
-
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; font-family: inherit; }
-
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; }
-        
-        /* Grid Produk */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); position: relative; }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; }
-        .card-price { color: var(--primary); font-weight: 700; font-size: 1.3rem; display: block; margin: 10px 0; }
-        
-        .benefit-box { background: #f8fafc; padding: 12px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 15px; border-left: 4px solid var(--primary); }
-
-        /* Payment Buttons */
-        .pay-group { display: flex; flex-direction: column; gap: 8px; }
-        .btn-pay { border: none; padding: 10px; border-radius: 12px; color: white; cursor: pointer; font-weight: 600; text-align: center; font-size: 0.85rem; transition: 0.3s; }
-        .btn-dana { background: var(--dana); }
-        .btn-gopay { background: var(--gopay); }
-        .btn-qr { background: var(--dark); }
-        .btn-pay:hover { filter: brightness(1.1); transform: scale(1.02); }
-
-        /* Modal Pop Up */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px); justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 25px;
-            width: 90%; max-width: 400px; text-align: center; position: relative;
-        }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 20px; cursor: pointer; }
-
-        .btn-confirm { 
-            background: var(--wa-green); color: white; width: 100%; 
-            padding: 15px; border-radius: 15px; border: none; 
-            margin-top: 20px; font-weight: 700; cursor: pointer; 
-        }
-
-        .btn-del { position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .admin-only { display: none; }
+        .is-admin .admin-only { display: block; }
     </style>
 </head>
-<body>
+<body class="bg-black text-white antialiased">
 
-<div class="container">
-    <header>
-        <h1>💎 Abay Premium</h1>
-        <button class="btn" onclick="toggleAdmin()" style="background:#475569">Admin</button>
-    </header>
-
-    <div id="adminPanel">
-        <h3>⚙️ Pengaturan Admin</h3>
-        
-        <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
-            <label>Link Background (Catbox/ImgBB):</label>
-            <input type="text" id="bgUrl" placeholder="https://files.catbox.moe/xxx.jpg">
-            <button class="btn" onclick="updateBg()" style="background: #22c55e; width: 100%;">Ganti Background Website</button>
+    <nav class="fixed w-full z-50 glass px-6 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-black tracking-tighter uppercase">Abay Studio</h1>
+        <div class="flex gap-5 text-sm font-bold uppercase">
+            <a href="#portfolio" class="hover:text-blue-500">Portfolio</a>
+            <a href="#shop" class="hover:text-blue-500">Shop</a>
+            <button onclick="showSales()" class="admin-only text-yellow-500">Sales</button>
         </div>
+    </nav>
 
-        <hr style="opacity: 0.2; margin: 20px 0;">
-
-        <h4>Tambah Produk</h4>
-        <input type="text" id="pName" placeholder="Nama Produk">
-        <input type="number" id="pPrice" placeholder="Harga">
-        <input type="text" id="pImg" placeholder="Link Foto Produk">
-        <textarea id="pBenefit" rows="3" placeholder="Benefit (Gunakan Enter untuk baris baru)"></textarea>
-        <button class="btn" onclick="tambahProduk()" style="width:100%">Upload Produk</button>
-    </div>
-
-    <div class="grid" id="etalase"></div>
-</div>
-
-<div id="paymentModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h3 id="modalTitle">Instruksi Pembayaran</h3>
-        <p>Silakan transfer ke nomor berikut:</p>
-        <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: 2px;" id="targetNumber">
-            -
+    <section id="portfolio" class="min-h-screen flex flex-col justify-center items-center px-6 text-center">
+        <div id="hero-display">
+            <h1 class="text-7xl md:text-9xl font-black mb-4">CREATIVE</h1>
+            <p class="text-gray-500 text-lg">Loading content...</p>
         </div>
-        <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">Pastikan nominal sesuai dengan harga produk.</p>
-        <button class="btn-confirm" id="confirmBtn">Saya Sudah Bayar</button>
-    </div>
-</div>
+        <button onclick="editHero()" class="admin-only mt-10 bg-blue-600 px-6 py-2 rounded-full text-xs font-bold uppercase">Edit Hero</button>
+    </section>
 
-<script>
-    // --- PENGATURAN UTAMA ---
-    const DB_URL = "https://toko-49a45-default-rtdb.firebaseio.com/:";
-    const NOMOR_WA = "6287893344461"; 
-    const NO_DANA = "087893344461";   
-    const NO_GOPAY = "087893344461";  
-    const LINK_QRIS = "https://files.catbox.moe/nzkt5h.jpg"; 
+    <section id="shop" class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="flex justify-between items-end mb-12">
+            <h2 class="text-4xl font-black uppercase">The Shop</h2>
+            <button onclick="addProduct()" class="admin-only bg-green-600 px-4 py-2 rounded text-xs font-bold">ADD ITEM</button>
+        </div>
+        <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+    </section>
 
-    let isAdmin = false;
-
-    function toggleAdmin() {
-        if(prompt("Pass:") === "abay123") {
-            isAdmin = true;
-            document.getElementById('adminPanel').style.display = 'block';
-            muatData();
-        }
-    }
-
-    // Fungsi Baru: Update Background
-    async function updateBg() {
-        const url = document.getElementById('bgUrl').value;
-        if(!url) return alert("Masukkan link gambar!");
-        await fetch(`${DB_URL}/config.json`, { method: 'PATCH', body: JSON.stringify({ bg: url }) });
-        alert("Background Berhasil Diubah!");
-        muatData();
-    }
-
-    async function tambahProduk() {
-        const payload = {
-            nama: document.getElementById('pName').value,
-            harga: document.getElementById('pPrice').value,
-            foto: document.getElementById('pImg').value,
-            benefit: document.getElementById('pBenefit').value
-        };
-        await fetch(`${DB_URL}/produk.json`, { method: 'POST', body: JSON.stringify(payload) });
-        location.reload(); 
-    }
-
-    async function hapus(id) {
-        if(confirm("Hapus?")) {
-            await fetch(`${DB_URL}/produk/${id}.json`, { method: 'DELETE' });
-            muatData();
-        }
-    }
-
-    function openModal(method, productName, productPrice) {
-        const modal = document.getElementById('paymentModal');
-        const title = document.getElementById('modalTitle');
-        const target = document.getElementById('targetNumber');
-        const confirmBtn = document.getElementById('confirmBtn');
-
-        modal.style.display = 'flex';
-
-        if(method === 'DANA') {
-            title.innerText = "Pembayaran DANA";
-            target.innerText = NO_DANA;
-        } else if(method === 'GOPAY') {
-            title.innerText = "Pembayaran GOPAY";
-            target.innerText = NO_GOPAY;
-        } else if(method === 'QRIS') {
-            title.innerText = "Pembayaran QRIS";
-            target.innerHTML = `<img src="${LINK_QRIS}" style="width:100%; border-radius:10px;">`;
-        }
-
-        confirmBtn.onclick = () => {
-            const text = `*KONFIRMASI PEMBAYARAN*\n-----------\n📦 *Produk:* ${productName}\n💰 *Harga:* Rp ${Number(productPrice).toLocaleString()}\n💳 *Metode:* ${method}\n\nSaya sudah melakukan transfer, mohon diproses Min!`;
-            window.open(`https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(text)}`, '_blank');
-        };
-    }
-
-    function closeModal() {
-        document.getElementById('paymentModal').style.display = 'none';
-    }
-
-    async function muatData() {
-        try {
-            const res = await fetch(`${DB_URL}/.json`);
-            const data = await res.json();
-
-            // Load Background dari Cloud
-            if(data?.config?.bg) {
-                document.body.style.backgroundImage = `url('${data.config.bg}')`;
-            }
-
-            const etalase = document.getElementById('etalase');
-            etalase.innerHTML = "";
+    <div id="pay-modal" class="fixed inset-0 z-[100] hidden bg-black/95 flex items-center justify-center p-6">
+        <div class="glass max-w-md w-full p-8 rounded-3xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500"><i class="fas fa-times"></i></button>
+            <h3 id="m-name" class="text-2xl font-black mb-1"></h3>
+            <p id="m-price" class="text-blue-500 font-bold mb-8"></p>
             
-            if(data?.produk) {
-                Object.keys(data.produk).forEach(id => {
-                    const p = data.produk[id];
-                    etalase.innerHTML += `
-                        <div class="card">
-                            ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
-                            <img src="${p.foto}" onerror="this.src='https://placehold.co/400x300?text=Gambar+Rusak'">
-                            <div class="card-body">
-                                <span class="card-title">${p.nama}</span>
-                                <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
-                                <div class="benefit-box"><strong>Benefit:</strong><br>${p.benefit ? p.benefit.replace(/\n/g, '<br>') : '-'}</div>
-                                
-                                <div class="pay-group">
-                                    <button class="btn-pay btn-dana" onclick="openModal('DANA', '${p.nama}', '${p.harga}')">Bayar via DANA</button>
-                                    <button class="btn-pay btn-gopay" onclick="openModal('GOPAY', '${p.nama}', '${p.harga}')">Bayar via GOPAY</button>
-                                    <button class="btn-pay btn-qr" onclick="openModal('QRIS', '${p.nama}', '${p.harga}')">Bayar via QRIS</button>
-                                </div>
-                            </div>
-                        </div>`;
-                });
-            }
-        } catch (e) { console.log("Error muat data:", e); }
-    }
+            <div class="space-y-4 mb-8">
+                <div class="p-4 bg-white/5 rounded-xl flex justify-between items-center border border-white/10">
+                    <div><p class="text-[10px] opacity-50 uppercase">DANA/GOPAY</p><p class="font-bold">087893344461</p></div>
+                    <button onclick="copy('087893344461')" class="bg-blue-600 px-3 py-1 rounded text-xs">Copy</button>
+                </div>
+                <div class="bg-white p-4 rounded-xl flex flex-col items-center">
+                    <p class="text-black text-[10px] font-bold mb-2 uppercase">Scan QRIS</p>
+                    <img src="https://files.catbox.moe/nzkt5h.jpg" class="w-32 h-32">
+                </div>
+            </div>
+            <button onclick="confirmPayment()" class="w-full bg-blue-600 py-4 rounded-xl font-bold uppercase hover:bg-blue-500">I Have Paid</button>
+        </div>
+    </div>
 
-    muatData();
-</script>
+    <footer class="py-20 text-center opacity-20">
+        <p onclick="adminLogin()" class="text-[10px] tracking-widest cursor-default">ADMIN SYSTEM ACCESS</p>
+    </footer>
+
+    <script>
+        // MASUKKAN LINK DATABASE ANDA DI SINI (Pastikan akhiri dengan garis miring /)
+        const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/"; 
+        
+        let currentItem = {};
+
+        // Ambil Data
+        async function loadData() {
+            // Load Hero
+            const hRes = await fetch(dbUrl + "hero.json");
+            const h = await hRes.json();
+            if(h) document.getElementById('hero-display').innerHTML = `<h1 class="text-7xl md:text-9xl font-black mb-4 uppercase tracking-tighter">${h.title}</h1><p class="text-gray-500 text-lg">${h.desc}</p>`;
+
+            // Load Products
+            const pRes = await fetch(dbUrl + "products.json");
+            const p = await pRes.json();
+            const list = document.getElementById('product-list');
+            list.innerHTML = '';
+            for(let id in p) {
+                list.innerHTML += `
+                <div class="glass p-5 rounded-2xl">
+                    <img src="${p[id].img}" class="h-48 w-full object-cover rounded-xl mb-4">
+                    <h3 class="text-xl font-bold uppercase">${p[id].name}</h3>
+                    <p class="text-sm text-gray-500 mb-6">${p[id].desc}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-black">Rp ${parseInt(p[id].price).toLocaleString()}</span>
+                        <div class="flex gap-2">
+                            <button onclick="startPay('${p[id].name}', ${p[id].price})" class="bg-white text-black px-4 py-2 rounded font-bold text-xs uppercase">Buy</button>
+                            <button onclick="delProduct('${id}')" class="admin-only text-red-500 px-2"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        // Pembayaran & Sales
+        function startPay(n, p) {
+            currentItem = { n, p };
+            document.getElementById('m-name').innerText = n;
+            document.getElementById('m-price').innerText = "Rp " + p.toLocaleString();
+            document.getElementById('pay-modal').classList.remove('hidden');
+        }
+
+        async function confirmPayment() {
+            const time = new Date().toLocaleString();
+            // Simpan Sales
+            await fetch(dbUrl + "sales.json", {
+                method: 'POST',
+                body: JSON.stringify({ item: currentItem.n, price: currentItem.p, date: time })
+            });
+
+            // WA Redirect
+            const msg = `Halo Abay! Konfirmasi Bayar:\nItem: ${currentItem.n}\nHarga: Rp ${currentItem.p.toLocaleString()}\nJam: ${time}`;
+            window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`);
+            closeModal();
+        }
+
+        // Admin Controls
+        async function editHero() {
+            const { value: v } = await Swal.fire({
+                title: 'Edit Hero',
+                html: '<input id="t" class="swal2-input" placeholder="Title"><input id="d" class="swal2-input" placeholder="Desc">',
+                preConfirm: () => [document.getElementById('t').value, document.getElementById('d').value]
+            });
+            if(v) {
+                await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify({ title: v[0], desc: v[1] }) });
+                loadData();
+            }
+        }
+
+        async function addProduct() {
+            const { value: v } = await Swal.fire({
+                title: 'Add Product',
+                html: '<input id="n" class="swal2-input" placeholder="Name"><input id="p" class="swal2-input" type="number" placeholder="Price"><input id="i" class="swal2-input" placeholder="Image URL"><input id="d" class="swal2-input" placeholder="Desc">',
+                preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value, document.getElementById('d').value]
+            });
+            if(v) {
+                await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2], desc: v[3] }) });
+                loadData();
+            }
+        }
+
+        async function delProduct(id) {
+            if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); }
+        }
+
+        async function showSales() {
+            const r = await fetch(dbUrl + "sales.json");
+            const s = await r.json();
+            let html = '<div class="text-left text-xs">';
+            let total = 0;
+            for(let id in s) {
+                total += parseInt(s[id].price);
+                html += `<div class="mb-2 border-b border-white/10 pb-1"><b>${s[id].item}</b><br><span class="opacity-50">${s[id].date}</span> - Rp${s[id].price.toLocaleString()}</div>`;
+            }
+            html += `</div><div class="mt-4 text-xl font-bold text-green-500">Total: Rp ${total.toLocaleString()}</div>`;
+            Swal.fire({ title: 'Sales Log', html, background: '#111', color: '#fff' });
+        }
+
+        function adminLogin() {
+            Swal.fire({ title: 'Pass?', input: 'password' }).then(res => {
+                if(res.value === 'abay123') document.body.classList.add('is-admin');
+            });
+        }
+
+        function closeModal() { document.getElementById('pay-modal').classList.add('hidden'); }
+        function copy(t) { navigator.clipboard.writeText(t); alert('Copied!'); }
+
+        loadData();
+    </script>
 </body>
 </html>
