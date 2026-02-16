@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Online V2 - Secure</title>
+    <style>
+        :root { --primary: #2563eb; --danger: #dc2626; --light: #f8fafc; }
+        body { font-family: sans-serif; background: var(--light); margin: 0; padding: 15px; }
+        
+        /* Header & Nav */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-admin { background: #64748b; color: white; }
+        
+        /* Form Admin (Tersembunyi secara default) */
+        #adminPanel { 
+            display: none; background: white; padding: 20px; 
+            border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn-save { background: var(--primary); color: white; width: 100%; }
+
+        /* Etalase Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; }
+        .card img { width: 100%; height: 150px; object-fit: cover; }
+        .info { padding: 10px; }
+        .name { font-weight: bold; font-size: 1rem; margin-bottom: 5px; display: block; }
+        .price { color: var(--danger); font-weight: bold; }
+        
+        /* Tombol Hapus (Hanya muncul untuk Admin) */
+        .btn-delete { 
+            display: none; position: absolute; top: 5px; right: 5px; 
+            background: rgba(220, 38, 38, 0.8); color: white; 
+            border: none; padding: 5px 8px; border-radius: 5px; font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Warung Digital</h1>
+        <button class="btn btn-admin" onclick="loginAdmin()">Login Admin</button>
+    </header>
+
+    <div id="adminPanel">
+        <h3>Tambah Produk Baru</h3>
+        <input type="text" id="pName" placeholder="Nama Produk">
+        <input type="number" id="pPrice" placeholder="Harga (Rp)">
+        <input type="file" id="pImage" accept="image/*">
+        <button class="btn btn-save" onclick="simpanProduk()">Simpan ke Etalase</button>
+        <button class="btn" onclick="logoutAdmin()" style="margin-top: 10px; width: 100%;">Logout</button>
+    </div>
+
+    <div class="grid" id="etalase">
+        </div>
+
+    <script>
+        let isAdmin = false;
+
+        // 1. Cek Login
+        function loginAdmin() {
+            const pass = prompt("Masukkan Password Admin:");
+            if (pass === "admin123") { // Ganti password di sini
+                isAdmin = true;
+                document.getElementById('adminPanel').style.display = 'block';
+                renderProduk();
+                alert("Halo Bos! Panel admin aktif.");
+            } else {
+                alert("Password Salah!");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminPanel').style.display = 'none';
+            renderProduk();
+        }
+
+        // 2. Simpan ke LocalStorage (Memori Browser HP)
+        function simpanProduk() {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const imgInput = document.getElementById('pImage');
+            
+            if(!name || !price || !imgInput.files[0]) return alert("Lengkapi data!");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const produkBaru = {
+                    id: Date.now(),
+                    nama: name,
+                    harga: price,
+                    foto: e.target.result
+                };
+
+                // Ambil data lama, tambah yang baru, simpan kembali
+                let listProduk = JSON.parse(localStorage.getItem('database_toko')) || [];
+                listProduk.push(produkBaru);
+                localStorage.setItem('database_toko', JSON.stringify(listProduk));
+
+                // Reset form & update tampilan
+                imgInput.value = '';
+                document.getElementById('pName').value = '';
+                document.getElementById('pPrice').value = '';
+                renderProduk();
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        }
+
+        // 3. Tampilkan Data
+        function renderProduk() {
+            const container = document.getElementById('etalase');
+            const data = JSON.parse(localStorage.getItem('database_toko')) || [];
+            
+            container.innerHTML = data.map(p => `
+                <div class="card">
+                    <button class="btn-delete" style="display: ${isAdmin ? 'block' : 'none'}" onclick="hapusProduk(${p.id})">Hapus</button>
+                    <img src="${p.foto}">
+                    <div class="info">
+                        <span class="name">${p.nama}</span>
+                        <span class="price">Rp ${Number(p.harga).toLocaleString('id-ID')}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 4. Hapus Produk
+        function hapusProduk(id) {
+            if(confirm("Hapus produk ini?")) {
+                let list = JSON.parse(localStorage.getItem('database_toko'));
+                list = list.filter(item => item.id !== id);
+                localStorage.setItem('database_toko', JSON.stringify(list));
+                renderProduk();
+            }
+        }
+
+        // Jalankan saat pertama buka
+        renderProduk();
+    </script>
+</body>
+</html>
