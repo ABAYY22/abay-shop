@@ -22,12 +22,12 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .story-body { line-height: 1.8; letter-spacing: 0.02em; }
 
-        /* GEMINI APP STYLE UI */
-        #ai-window { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(20px); opacity: 0; pointer-events: none; }
-        #ai-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        /* AI UI - GEMINI STYLE */
+        #ai-window { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(20px); opacity: 0; pointer-events: none; visibility: hidden; }
+        #ai-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; visibility: visible; }
         .gemini-gradient { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .ai-bubble { background: #1e1e1e; border-radius: 1.2rem; border-top-left-radius: 0.2rem; }
-        .user-bubble { background: #2b2b2b; border-radius: 1.2rem; border-top-right-radius: 0.2rem; }
+        .ai-bubble { background: #1e1e1e; border-radius: 1.2rem; border-top-left-radius: 0.2rem; align-self: flex-start; }
+        .user-bubble { background: #2b2b2b; border-radius: 1.2rem; border-top-right-radius: 0.2rem; align-self: flex-end; }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -96,38 +96,16 @@
         </div>
     </main>
 
-    <div id="story-modal" class="fixed inset-0 z-[100] hidden bg-black/98 overflow-y-auto px-6 py-20 backdrop-blur-2xl">
-        <div class="max-w-2xl mx-auto">
-            <button onclick="closeStory()" class="fixed top-8 right-8 text-white/50 text-2xl hover:text-white"><i class="fas fa-times"></i></button>
-            <span id="rs-category" class="text-blue-500 font-black text-[10px] tracking-[0.3em] uppercase"></span>
-            <h2 id="rs-title" class="text-4xl md:text-5xl font-black mt-4 mb-10 leading-tight uppercase italic"></h2>
-            <div id="rs-content" class="text-gray-300 leading-relaxed text-lg whitespace-pre-wrap story-body"></div>
-        </div>
-    </div>
-
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 glass px-8 py-4 rounded-full z-[100] border border-white/20">
-        <button onclick="toggleMusic()" class="text-white hover:text-blue-500 transition w-6"><i id="music-icon" class="fas fa-play"></i></button>
-        <div class="w-[1px] h-4 bg-white/20"></div>
-        <button onclick="changeMusic()" class="text-[9px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100">Playlist</button>
-        <button onclick="managePlaylist()" class="admin-only text-purple-400 text-[10px] hover:text-purple-300 transition"><i class="fas fa-cog"></i></button>
-    </div>
-    <audio id="bg-audio" loop></audio>
-
-    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10 hover:border-blue-500 transition-all">
-        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L14.85 9.15L22 12L14.85 14.85L12 22L9.15 14.85L2 12L9.15 9.15L12 2Z" fill="url(#gemini-svg-grad)"/>
-            <defs><linearGradient id="gemini-svg-grad" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs>
-        </svg>
+    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10 hover:border-blue-500 transition-all text-2xl">
+        <svg class="w-8 h-8" viewBox="0 0 24 24"><path d="M12 2L14.85 9.15L22 12L14.85 14.85L12 22L9.15 14.85L2 12L9.15 9.15L12 2Z" fill="url(#gemini-svg-grad)"/><defs><linearGradient id="gemini-svg-grad" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs></svg>
     </div>
 
     <div id="ai-window" class="fixed bottom-24 right-6 w-[92%] md:w-[400px] h-[70vh] bg-[#0f0f0f] rounded-[2rem] flex flex-col z-[101] border border-white/10 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-white/5 flex justify-between items-center bg-[#161616]">
-            <div class="flex items-center gap-2">
-                <span class="text-sm font-bold gemini-gradient tracking-tight italic">Gemini Abay Studio</span>
-            </div>
+            <span class="text-sm font-bold gemini-gradient tracking-tight italic">Gemini Abay Studio</span>
             <button onclick="toggleAI()" class="text-white/30 hover:text-white transition"><i class="fas fa-times"></i></button>
         </div>
-        <div id="ai-messages" class="flex-1 p-6 overflow-y-auto space-y-6 no-scrollbar">
+        <div id="ai-messages" class="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col no-scrollbar">
             <div class="ai-bubble p-4 text-sm text-gray-200 leading-relaxed max-w-[85%]">
                 Halo! Saya asisten AI Abay Studio. Ada yang bisa saya bantu hari ini?
             </div>
@@ -139,9 +117,15 @@
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
-            <p class="text-[8px] text-center mt-3 opacity-30 uppercase tracking-widest font-bold">Powered by Gemini Pro 1.5</p>
         </div>
     </div>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 glass px-8 py-4 rounded-full z-[100] border border-white/20">
+        <button onclick="toggleMusic()" class="text-white hover:text-blue-500 transition w-6"><i id="music-icon" class="fas fa-play"></i></button>
+        <div class="w-[1px] h-4 bg-white/20"></div>
+        <button onclick="changeMusic()" class="text-[9px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100">Playlist</button>
+    </div>
+    <audio id="bg-audio" loop></audio>
 
     <footer class="py-10 text-center opacity-20">
         <p onclick="adminLogin()" class="text-[9px] tracking-[0.5em] uppercase cursor-pointer">Abay Studio Secure System</p>
@@ -155,7 +139,7 @@
 
         window.onload = () => { loadData(); loadStories(); };
 
-        // FUNGSI AI (GEMINI STYLE)
+        // FUNGSI GEMINI AI (FIXED)
         function toggleAI() {
             document.getElementById('ai-window').classList.toggle('active');
         }
@@ -166,35 +150,33 @@
             const prompt = input.value.trim();
             if(!prompt) return;
 
-            // User Message
-            box.innerHTML += `<div class="user-bubble p-4 text-sm text-white leading-relaxed max-w-[85%] ml-auto">${prompt}</div>`;
+            box.innerHTML += `<div class="user-bubble p-4 text-sm text-white max-w-[85%] ml-auto">${prompt}</div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
 
-            // Loading state
             const loadId = 'ai-' + Date.now();
-            box.innerHTML += `<div id="${loadId}" class="ai-bubble p-4 text-sm text-gray-500 animate-pulse italic max-w-[85%]">Gemini sedang berpikir...</div>`;
+            box.innerHTML += `<div id="${loadId}" class="ai-bubble p-4 text-sm text-gray-500 animate-pulse italic">Memproses...</div>`;
             box.scrollTop = box.scrollHeight;
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Kamu adalah 'Abay AI', asisten cerdas milik Abay Studio. Jawab dengan gaya bahasa yang santai, modern, dan informatif. Pertanyaan: ${prompt}` }] }]
+                        contents: [{ parts: [{ text: `Kamu adalah Abay AI, asisten cerdas untuk web Abay Studio. Jawablah dengan ramah dan asik. Pertanyaan: ${prompt}` }] }]
                     })
                 });
-                const data = await res.json();
+                const data = await response.json();
                 const reply = data.candidates[0].content.parts[0].text;
-                
                 document.getElementById(loadId).remove();
-                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 leading-relaxed max-w-[85%]">${reply}</div>`;
-            } catch (e) {
-                document.getElementById(loadId).innerHTML = "Gagal terhubung ke AI. Cek koneksi atau API Key.";
+                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${reply}</div>`;
+            } catch (err) {
+                document.getElementById(loadId).innerText = "Maaf, AI sedang gangguan. Coba lagi nanti!";
             }
             box.scrollTop = box.scrollHeight;
         }
 
+        // FUNGSI LAINNYA (TETAP SAMA)
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
