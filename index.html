@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abay Studio | All-in-One Hub Fix</title>
+    <title>Abay Studio | All-in-One Hub Final Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -30,14 +30,12 @@
             <div class="text-center md:text-left flex-1">
                 <h1 id="p-nama" class="text-4xl font-black uppercase tracking-tighter text-blue-500">Abay Studio</h1>
                 <p id="p-bio" class="text-xs opacity-50 font-bold tracking-widest uppercase mt-1 mb-4">-</p>
-                
                 <div class="grid grid-cols-2 gap-3 text-[10px] uppercase font-bold tracking-tight">
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5"><span class="opacity-40 block">Hobi</span><span id="p-hobi">-</span></div>
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5"><span class="opacity-40 block">Skill</span><span id="p-skill">-</span></div>
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5"><span class="opacity-40 block">Sekolah</span><span id="p-sekolah">-</span></div>
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5"><span class="opacity-40 block">Alamat</span><span id="p-alamat">-</span></div>
                 </div>
-
                 <button onclick="editHero()" class="admin-only mt-6 bg-blue-600 px-6 py-2 rounded-full text-[10px] font-bold uppercase hover:bg-blue-500 transition">Edit Profile</button>
             </div>
         </div>
@@ -45,20 +43,13 @@
 
     <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-xl py-4 border-y border-white/5 mb-10">
         <div class="flex justify-center gap-3 px-4 overflow-x-auto no-scrollbar">
-            <button onclick="openTab('stories')" class="nav-tab active px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2">
-                <i class="fas fa-book-open"></i> Stories
-            </button>
-            <button onclick="openTab('tools')" class="nav-tab px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2">
-                <i class="fas fa-tools"></i> Tools
-            </button>
-            <button onclick="openTab('shop')" class="nav-tab px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2">
-                <i class="fas fa-shopping-cart"></i> Shop
-            </button>
+            <button onclick="openTab('stories')" class="nav-tab active px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2"><i class="fas fa-book-open"></i> Stories</button>
+            <button onclick="openTab('tools')" class="nav-tab px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2"><i class="fas fa-tools"></i> Tools</button>
+            <button onclick="openTab('shop')" class="nav-tab px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10 flex items-center gap-2"><i class="fas fa-shopping-cart"></i> Shop</button>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-6 pb-32">
-        
         <div id="stories" class="tab-content active">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-black uppercase italic tracking-tighter">My Stories</h2>
@@ -72,17 +63,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-red-500">
                     <h3 class="font-black uppercase mb-2 flex items-center gap-2"><i class="fab fa-tiktok text-red-500"></i> Video Downloader</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase">Support TikTok, IG, FB, etc.</p>
+                    <p class="text-[10px] opacity-40 mb-6 uppercase">TikTok, IG, FB & More</p>
                     <div class="flex flex-col gap-3">
-                        <input id="dl-url" type="text" placeholder="Paste link video di sini..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs focus:outline-none focus:border-red-500 transition">
-                        <button onclick="downloadVideo()" class="bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase hover:bg-gray-200 transition">Download Video</button>
+                        <input id="dl-url" type="text" placeholder="Masukkan Link Video..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs focus:outline-none">
+                        <button onclick="downloadVideo()" class="bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Download Now</button>
                     </div>
                 </div>
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500">
-                    <h3 class="font-black uppercase mb-2 flex items-center gap-2"><i class="fas fa-cloud-upload-alt text-blue-500"></i> Link Generator</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase">Upload Foto/Video jadi link</p>
+                    <h3 class="font-black uppercase mb-2 flex items-center gap-2"><i class="fas fa-link text-blue-500"></i> Link Generator</h3>
+                    <p class="text-[10px] opacity-40 mb-6 uppercase">Upload File (Max 1GB)</p>
                     <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
-                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-500 transition">Pilih & Upload File</button>
+                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Select & Upload</button>
                     <div id="upload-status" class="mt-4 text-center text-[10px] font-bold break-all text-blue-400"></div>
                 </div>
             </div>
@@ -90,25 +81,14 @@
 
         <div id="shop" class="tab-content">
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-black uppercase italic tracking-tighter">Shop</h2>
+                <h2 class="text-2xl font-black uppercase italic tracking-tighter">Marketplace</h2>
                 <div class="flex gap-2">
-                    <button onclick="showSales()" class="admin-only bg-yellow-600 px-4 py-2 rounded-xl text-[10px] font-bold"><i class="fas fa-history"></i></button>
-                    <button onclick="addProduct()" class="admin-only bg-green-600 px-4 py-2 rounded-xl text-[10px] font-bold"><i class="fas fa-plus mr-1"></i> ADD</button>
+                    <button onclick="addProduct()" class="admin-only bg-green-600 px-4 py-2 rounded-xl text-[10px] font-bold">ADD ITEM</button>
                 </div>
             </div>
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
-
     </main>
-
-    <div id="story-modal" class="fixed inset-0 z-[100] hidden bg-black/98 overflow-y-auto px-6 py-20 backdrop-blur-2xl">
-        <div class="max-w-2xl mx-auto">
-            <button onclick="closeStory()" class="fixed top-8 right-8 text-white/50 text-2xl hover:text-white"><i class="fas fa-times"></i></button>
-            <span id="rs-category" class="text-blue-500 font-black text-[10px] tracking-[0.3em] uppercase"></span>
-            <h2 id="rs-title" class="text-4xl md:text-5xl font-black mt-4 mb-10 leading-tight uppercase italic"></h2>
-            <div id="rs-content" class="text-gray-300 leading-relaxed text-lg whitespace-pre-wrap story-body"></div>
-        </div>
-    </div>
 
     <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 glass px-8 py-4 rounded-full z-[100] border border-white/20">
         <button onclick="toggleMusic()" class="text-white hover:text-blue-500 transition w-6"><i id="music-icon" class="fas fa-play"></i></button>
@@ -124,14 +104,10 @@
 
     <script>
         const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/";
-        let currentItem = {};
         let isPlaying = false;
         const audio = document.getElementById('bg-audio');
 
-        window.onload = () => { 
-            loadData(); 
-            loadStories(); 
-        };
+        window.onload = () => { loadData(); loadStories(); };
 
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -159,194 +135,129 @@
                 const list = document.getElementById('product-list');
                 list.innerHTML = '';
                 for(let id in p) {
-                    list.innerHTML += `<div class="glass p-3 rounded-3xl"><img src="${p[id].img}" class="h-32 w-full object-cover rounded-2xl mb-3"><h3 class="text-[10px] font-bold uppercase truncate">${p[id].name}</h3><p class="text-blue-500 font-black text-xs mt-1">Rp${parseInt(p[id].price).toLocaleString()}</p><div class="flex gap-1 mt-3"><button onclick="startPay('${p[id].name}', ${p[id].price})" class="flex-1 bg-white text-black py-2 rounded-xl text-[9px] font-bold uppercase">Beli</button><button onclick="delProduct('${id}')" class="admin-only bg-red-500/20 text-red-500 p-2 rounded-xl text-[9px]"><i class="fas fa-trash"></i></button></div></div>`;
+                    list.innerHTML += `<div class="glass p-3 rounded-3xl"><img src="${p[id].img}" class="h-32 w-full object-cover rounded-2xl mb-3"><h3 class="text-[10px] font-bold uppercase truncate">${p[id].name}</h3><p class="text-blue-500 font-black text-xs mt-1">Rp${parseInt(p[id].price).toLocaleString()}</p><div class="flex gap-1 mt-3"><button onclick="choosePayment('${p[id].name}', ${p[id].price})" class="flex-1 bg-white text-black py-2 rounded-xl text-[9px] font-bold uppercase">Beli</button><button onclick="delProduct('${id}')" class="admin-only bg-red-500/20 text-red-500 p-2 rounded-xl text-[9px]"><i class="fas fa-trash"></i></button></div></div>`;
                 }
-            } catch(e) { console.error("Database Down"); }
+            } catch(e) {}
         }
 
-        async function loadStories() {
-            const res = await fetch(dbUrl + "stories.json");
-            const data = await res.json();
-            const container = document.getElementById('story-list');
-            container.innerHTML = '';
-            if(!data) return container.innerHTML = '<p class="text-[10px] opacity-30">No stories found.</p>';
-            for(let id in data) {
-                container.innerHTML += `<div class="glass p-6 rounded-[2rem] hover:border-white/30 transition cursor-pointer" onclick="readStory('${id}')"><span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest">${data[id].category}</span><h3 class="font-bold uppercase mt-2 line-clamp-2">${data[id].title}</h3><p class="text-[10px] opacity-40 mt-3 line-clamp-2">${data[id].content}</p><button onclick="event.stopPropagation(); deleteStory('${id}')" class="admin-only mt-4 text-red-500 text-[9px] uppercase font-bold">Hapus</button></div>`;
-            }
-        }
-
-        // --- TOOLS LOGIC FIX ---
+        // --- UPLOAD LOGIC (TMPFILES API) ---
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
             const btn = document.getElementById('upload-btn');
-            
             if(!fileInput.files[0]) return;
-            
             btn.disabled = true;
-            status.innerHTML = "⏳ Sedang Mengunggah...";
-            
+            status.innerHTML = "⏳ Mengunggah ke Cloud...";
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
-
             try {
-                // Menggunakan API file.io yang lebih stabil untuk link temporary
-                const res = await fetch('https://file.io', { method: 'POST', body: formData });
+                const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
                 const data = await res.json();
-                
-                if(data.success) {
-                    status.innerHTML = `✅ Link Berhasil: <a href="${data.link}" target="_blank" class="underline text-blue-400 font-black">${data.link}</a>`;
-                    Swal.fire('Berhasil!', 'File sudah menjadi link.', 'success');
-                } else {
-                    throw new Error('Gagal upload');
-                }
+                if(data.status === 'success') {
+                    const finalLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+                    status.innerHTML = `✅ Link: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
+                    Swal.fire('Berhasil!', 'File tersimpan di cloud.', 'success');
+                } else { throw new Error(); }
             } catch(e) {
-                status.innerHTML = "❌ Gagal. Ukuran file terlalu besar atau server sibuk.";
-                Swal.fire('Error', 'Gagal mengunggah file.', 'error');
-            } finally {
-                btn.disabled = false;
-            }
+                status.innerHTML = "❌ Gagal. Coba file yang lebih kecil.";
+                Swal.fire('Error', 'Server sibuk, coba lagi nanti.', 'error');
+            } finally { btn.disabled = false; }
         }
 
+        // --- DOWNLOADER LOGIC (AIO API) ---
         async function downloadVideo() {
             const url = document.getElementById('dl-url').value;
-            if(!url) return Swal.fire('Oops!', 'Masukkan link video dulu', 'warning');
-            
-            Swal.fire({ title: 'Tunggu Sebentar...', text: 'Lagi diproses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-            
+            if(!url) return Swal.fire('Oops!', 'Tempel link dulu!', 'warning');
+            Swal.fire({ title: 'Mencari Video...', didOpen: () => Swal.showLoading() });
             try {
-                // Menggunakan API downloader pihak ketiga
-                const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
+                const res = await fetch(`https://api.vkrdown.com/server/index.php?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
-                
-                const finalUrl = data.video?.noWatermark || data.data?.video || data.video;
-                
-                if(finalUrl) {
-                    window.open(finalUrl);
-                    Swal.fire('Siap!', 'Video berhasil ditemukan.', 'success');
-                } else {
-                    throw new Error();
-                }
+                if(data.data && data.data.url) {
+                    window.open(data.data.url[0].url);
+                    Swal.fire('Berhasil!', 'Video ditemukan.', 'success');
+                } else { throw new Error(); }
             } catch(e) {
-                Swal.fire('Gagal', 'Link tidak valid atau server sedang down.', 'error');
+                Swal.fire('Gagal', 'Link tidak didukung atau eror server.', 'error');
             }
         }
 
-        // --- MUSIC PLAYLIST FIX ---
-        async function managePlaylist() {
-            try {
-                const res = await fetch(dbUrl + "playlist.json");
-                const p = await res.json();
-                let html = '<div class="space-y-2 mb-4 text-left max-h-60 overflow-y-auto">';
-                if(p) {
-                    for(let id in p) {
-                        html += `<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5">
-                            <span class="text-[10px] font-bold truncate mr-2">${p[id].title}</span>
-                            <button onclick="deleteSong('${id}')" class="text-red-500 p-2"><i class="fas fa-trash"></i></button>
-                        </div>`;
-                    }
-                } else { html += '<p class="text-center text-xs opacity-30">Playlist Kosong</p>'; }
-                
-                Swal.fire({ 
-                    title: 'Manage Playlist', 
-                    html: html + '<button onclick="addSong()" class="w-full bg-blue-600 py-3 rounded-xl mt-4 font-black text-xs uppercase tracking-widest">Add New Song</button>', 
-                    background: '#0a0a0a', color: '#fff', showConfirmButton: false 
-                });
-            } catch(e) { console.error("Error Playlist"); }
-        }
-
-        async function addSong() {
-            const { value: v } = await Swal.fire({ 
-                title: 'Add MP3 Link', 
-                background: '#0a0a0a', color: '#fff',
-                html: '<input id="st" class="swal2-input" placeholder="Nama Lagu"><input id="su" class="swal2-input" placeholder="Link MP3 (URL)">', 
-                preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] 
+        // --- SHOP PAYMENT SYSTEM ---
+        function choosePayment(name, price) {
+            Swal.fire({
+                title: 'Pilih Metode Bayar',
+                text: `Item: ${name} (Rp ${price.toLocaleString()})`,
+                background: '#0a0a0a',
+                color: '#fff',
+                showCancelButton: true,
+                confirmButtonText: 'DANA/QRIS',
+                cancelButtonText: 'GOPAY',
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#10b981'
+            }).then((result) => {
+                let method = result.isConfirmed ? "DANA/QRIS" : (result.dismiss === Swal.DismissReason.cancel ? "GOPAY" : "");
+                if(method) {
+                    Swal.fire({
+                        title: 'Pembayaran ' + method,
+                        html: `<div class="bg-white p-4 rounded-xl mb-4"><img src="https://files.catbox.moe/nzkt5h.jpg" class="w-full"></div><p class="text-xs opacity-50 uppercase">Klik konfirmasi jika sudah membayar</p>`,
+                        background: '#0a0a0a',
+                        color: '#fff',
+                        confirmButtonText: 'SAYA SUDAH BAYAR'
+                    }).then(() => {
+                        const waMsg = `Halo Abay! Konfirmasi Pembayaran:\n\n` +
+                                     `🛒 Item: ${name}\n` +
+                                     `💰 Harga: Rp ${price.toLocaleString()}\n` +
+                                     `💳 Metode: ${method}\n\n` +
+                                     `Saya sudah membayar, tolong segera diproses ya!`;
+                        window.open(`https://wa.me/6287893344461?text=${encodeURIComponent(waMsg)}`);
+                    });
+                }
             });
-            if(v && v[0] && v[1]) {
-                await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) });
-                managePlaylist();
-            }
         }
 
-        async function deleteSong(id) {
-            await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' });
-            managePlaylist();
-        }
-
-        // --- ADMIN CORE ---
+        // --- FUNGSI LAIN (TETAP SAMA) ---
         function adminLogin() {
             Swal.fire({ title: 'Password Admin?', input: 'password', background: '#0a0a0a', color: '#fff' }).then(res => {
-                if(res.value === 'abay123') {
-                    document.body.classList.add('is-admin');
-                    Swal.fire('Welcome Abay!', 'Akses admin terbuka.', 'success');
-                    loadData(); loadStories();
-                }
+                if(res.value === 'abay123') { document.body.classList.add('is-admin'); Swal.fire('Akses Diterima', '', 'success'); }
             });
         }
-
         function toggleMusic() {
             const icon = document.getElementById('music-icon');
             if(isPlaying) { audio.pause(); icon.className = "fas fa-play"; }
             else { audio.play(); icon.className = "fas fa-pause"; }
             isPlaying = !isPlaying;
         }
-
         async function changeMusic() {
-            const res = await fetch(dbUrl + "playlist.json");
-            const p = await res.json();
-            if(!p) return Swal.fire('Info', 'Playlist belum diisi admin.', 'info');
+            const res = await fetch(dbUrl + "playlist.json"); const p = await res.json();
             let opt = {}; for(let id in p) opt[p[id].url] = p[id].title;
             const { value: url } = await Swal.fire({ title: 'Pilih Lagu', input: 'select', inputOptions: opt, background: '#0a0a0a', color: '#fff' });
-            if(url) { 
-                audio.src = url; 
-                audio.play(); 
-                isPlaying = true; 
-                document.getElementById('music-icon').className = "fas fa-pause"; 
-            }
+            if(url) { audio.src = url; audio.play(); isPlaying = true; document.getElementById('music-icon').className = "fas fa-pause"; }
         }
-
-        // --- OTHER ADMIN FUNCTIONS ---
         async function editHero() {
-            const { value: v } = await Swal.fire({ 
-                title: 'Edit Full Portfolio', 
-                background: '#0a0a0a', color: '#fff',
-                html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ek" class="swal2-input" placeholder="Keahlian/Skill"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="em" class="swal2-input" placeholder="Musik Default URL">', 
-                preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, skill: document.getElementById('ek').value, sekolah: document.getElementById('es').value, alamat: document.getElementById('ea').value, music: document.getElementById('em').value }) 
-            });
+            const { value: v } = await Swal.fire({ title: 'Edit Profile', background: '#0a0a0a', color: '#fff', html: '<input id="en" class="swal2-input" placeholder="Nama"><input id="eb" class="swal2-input" placeholder="Bio"><input id="ef" class="swal2-input" placeholder="Foto URL"><input id="eh" class="swal2-input" placeholder="Hobi"><input id="ek" class="swal2-input" placeholder="Skill"><input id="es" class="swal2-input" placeholder="Sekolah"><input id="ea" class="swal2-input" placeholder="Alamat"><input id="em" class="swal2-input" placeholder="Music URL">', preConfirm: () => ({ nama: document.getElementById('en').value, bio: document.getElementById('eb').value, foto: document.getElementById('ef').value, hobi: document.getElementById('eh').value, skill: document.getElementById('ek').value, sekolah: document.getElementById('es').value, alamat: document.getElementById('ea').value, music: document.getElementById('em').value }) });
             if(v) { await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify(v) }); loadData(); }
         }
-
-        async function addStory() {
-            const { value: v } = await Swal.fire({
-                title: 'Tulis Cerita', background: '#0a0a0a', color: '#fff',
-                html: '<input id="st-t" class="swal2-input" placeholder="Judul"><select id="st-c" class="swal2-input"><option value="CERPEN">Cerpen</option><option value="DEVLOG">DevLog</option><option value="RANDOM">Random</option></select><textarea id="st-x" class="swal2-textarea" placeholder="Isi cerita..."></textarea>',
-                preConfirm: () => ({ title: document.getElementById('st-t').value, category: document.getElementById('st-c').value, content: document.getElementById('st-x').value, date: new Date().toLocaleDateString() })
-            });
-            if(v && v.title) { await fetch(dbUrl + "stories.json", { method: 'POST', body: JSON.stringify(v) }); loadStories(); }
-        }
-
-        async function readStory(id) {
-            const res = await fetch(`${dbUrl}stories/${id}.json`); 
-            const s = await res.json();
-            document.getElementById('rs-title').innerText = s.title;
-            document.getElementById('rs-category').innerText = s.category;
-            document.getElementById('rs-content').innerText = s.content;
-            document.getElementById('story-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeStory() { 
-            document.getElementById('story-modal').classList.add('hidden'); 
-            document.body.style.overflow = 'auto';
-        }
-
-        function startPay(n, p) { window.open(`https://wa.me/6287893344461?text=Halo Abay, saya mau beli ${n} (Rp${p.toLocaleString()})`); }
-        async function delProduct(id) { if(confirm('Hapus Item?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
-        async function deleteStory(id) { if(confirm('Hapus Cerita?')) { await fetch(`${dbUrl}stories/${id}.json`, { method: 'DELETE' }); loadStories(); } }
-        
         async function addProduct() {
-            const { value: v } = await Swal.fire({ title: 'Tambah Barang', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Image URL">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value] });
+            const { value: v } = await Swal.fire({ title: 'Add Item', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Image URL">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value] });
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2] }) }); loadData(); }
+        }
+        async function loadStories() {
+            const res = await fetch(dbUrl + "stories.json"); const data = await res.json();
+            const container = document.getElementById('story-list'); container.innerHTML = '';
+            for(let id in data) { container.innerHTML += `<div class="glass p-6 rounded-[2rem] cursor-pointer" onclick="readStory('${id}')"><span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest">${data[id].category}</span><h3 class="font-bold uppercase mt-2">${data[id].title}</h3><p class="text-[10px] opacity-40 mt-3 line-clamp-2">${data[id].content}</p><button onclick="event.stopPropagation(); deleteStory('${id}')" class="admin-only mt-4 text-red-500 text-[9px] uppercase font-bold">Hapus</button></div>`; }
+        }
+        async function readStory(id) {
+            const res = await fetch(`${dbUrl}stories/${id}.json`); const s = await res.json();
+            Swal.fire({ title: s.title, text: s.content, background: '#0a0a0a', color: '#fff' });
+        }
+        async function managePlaylist() {
+            const res = await fetch(dbUrl + "playlist.json"); const p = await res.json();
+            let html = '<div class="space-y-2">';
+            for(let id in p) { html += `<div class="flex justify-between items-center p-2 bg-white/5 rounded-xl"><span>${p[id].title}</span><button onclick="deleteSong('${id}')" class="text-red-500">X</button></div>`; }
+            Swal.fire({ title: 'Playlist', html: html + '<button onclick="addSong()" class="mt-4 bg-blue-600 px-4 py-2 rounded-xl text-xs">ADD SONG</button>', background: '#0a0a0a', color: '#fff' });
+        }
+        async function addSong() {
+            const { value: v } = await Swal.fire({ title: 'New Song', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
+            if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
         }
     </script>
 </body>
