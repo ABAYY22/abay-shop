@@ -3,166 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Online Cloud Pro</title>
+    <title>Abay Premium Store - Payment System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.9);
-            --primary: #4f46e5;
+            --glass: rgba(255, 255, 255, 0.95);
+            --primary: #6366f1;
             --wa-green: #25d366;
-            --dark: #1e293b;
+            --dana: #008ced;
+            --gopay: #00aade;
+            --dark: #0f172a;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0; padding: 0; min-height: 100vh;
+            background-color: #f1f5f9;
             background-size: cover; background-position: center; background-attachment: fixed;
-            background-color: #667eea;
-            transition: background 0.5s ease;
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
         header {
             background: var(--glass); backdrop-filter: blur(10px);
-            padding: 15px 20px; border-radius: 15px;
+            padding: 15px 20px; border-radius: 20px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px;
         }
 
         #adminPanel {
             display: none; background: white; padding: 25px;
             border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--primary);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 12px; box-sizing: border-box; }
+
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; }
         
-        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; }
-        .btn-wa { 
-            background: var(--wa-green); display: block; text-align: center; 
-            text-decoration: none; color: white; padding: 10px; 
-            border-radius: 10px; margin-top: 10px; font-weight: 600; font-size: 0.9rem;
+        /* Grid Produk */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); position: relative; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .card-price { color: var(--primary); font-weight: 700; font-size: 1.3rem; display: block; margin: 10px 0; }
+        
+        .benefit-box { background: #f8fafc; padding: 12px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 15px; border-left: 4px solid var(--primary); }
+
+        /* Payment Buttons */
+        .pay-group { display: flex; flex-direction: column; gap: 8px; }
+        .btn-pay { border: none; padding: 10px; border-radius: 12px; color: white; cursor: pointer; font-weight: 600; text-align: center; font-size: 0.85rem; transition: 0.3s; }
+        .btn-dana { background: var(--dana); }
+        .btn-gopay { background: var(--gopay); }
+        .btn-qr { background: var(--dark); }
+        .btn-pay:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        /* Modal Pop Up */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px); justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 25px;
+            width: 90%; max-width: 400px; text-align: center; position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 20px; cursor: pointer; }
+
+        .btn-confirm { 
+            background: var(--wa-green); color: white; width: 100%; 
+            padding: 15px; border-radius: 15px; border: none; 
+            margin-top: 20px; font-weight: 700; cursor: pointer; 
         }
 
-        /* Grid Produk */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .card-body { padding: 15px; text-align: center; }
-        .card-price { color: var(--primary); font-weight: bold; display: block; margin-bottom: 5px; }
-
-        .btn-del { position: absolute; top: 10px; right: 10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; z-index: 10; }
+        .btn-del { position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>✨Toko Online Abay</h1>
-        <button class="btn" onclick="toggleAdmin()" style="background:#64748b">Khusus Admin</button>
+        <h1>🌀Abay Shop</h1>
+        <button class="btn" onclick="toggleAdmin()" style="background:#475569">Admin</button>
     </header>
 
     <div id="adminPanel">
-        <h3>⚙️ Panel Admin (Cloud)</h3>
-        <label>Link Background (Catbox/ImgBB):</label>
-        <input type="text" id="bgUrl" placeholder="https://files.catbox.moe/xxx.jpg">
-        <button class="btn" onclick="updateBg()">Update Background</button>
-        <hr style="margin:20px 0; opacity:0.2">
-        <h4>Tambah Produk</h4>
-        <input type="text" id="pName" placeholder="Nama Barang">
-        <input type="number" id="pPrice" placeholder="Harga (Angka saja)">
+        <h3>⚙️ Tambah Produk</h3>
+        <input type="text" id="pName" placeholder="Nama Produk">
+        <input type="number" id="pPrice" placeholder="Harga">
         <input type="text" id="pImg" placeholder="Link Foto (Catbox/ImgBB)">
-        <button class="btn" onclick="tambahProduk()" style="width:100%">Simpan ke Cloud</button>
+        <textarea id="pBenefit" rows="3" placeholder="Benefit (Gunakan Enter untuk baris baru)"></textarea>
+        <button class="btn" onclick="tambahProduk()" style="width:100%">Upload</button>
     </div>
 
-    <div class="grid" id="etalase">
+    <div class="grid" id="etalase"></div>
+</div>
+
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle">Instruksi Pembayaran</h3>
+        <p>Silakan transfer ke nomor berikut:</p>
+        <div style="background: #f1f5f9; padding: 15px; border-radius: 15px; font-size: 1.5rem; font-weight: 700; color: var(--primary); letter-spacing: 2px;" id="targetNumber">
+            -
         </div>
+        <p style="font-size: 0.8rem; color: #64748b; margin-top: 10px;">Pastikan nominal sesuai dengan harga produk.</p>
+        <button class="btn-confirm" id="confirmBtn">Saya Sudah Bayar</button>
+    </div>
 </div>
 
 <script>
-    // 1. MASUKKAN LINK DATABASE FIREBASE KAMU
-    const DB_URL = "https://toko-49a45-default-rtdb.firebaseio.com/:";
-    
-    // 2. MASUKKAN NOMOR WHATSAPP KAMU (Gunakan format 628xxx)
-    const NOMOR_WA = "6287893344461"; 
+    // --- PENGATURAN UTAMA ---
+    const DB_URL = "https://toko-49a45-default-rtdb.firebaseio.com/";
+    const NOMOR_WA = "6287893344461"; // Ganti nomor kamu
+    const NO_DANA = "087893344461";   // Nomor DANA kamu
+    const NO_GOPAY = "087893344461";  // Nomor Gopay kamu
+    const LINK_QRIS = "https://files.catbox.moe/nzkt5h.jpg"; // Link gambar QRIS kamu
 
     let isAdmin = false;
 
     function toggleAdmin() {
-        if(prompt("Password Admin:") === "abayganteng09") {
+        if(prompt("Pass:") === "abay123") {
             isAdmin = true;
             document.getElementById('adminPanel').style.display = 'block';
             muatData();
         }
     }
 
-    async function updateBg() {
-        const url = document.getElementById('bgUrl').value;
-        if(!url) return alert("Masukkan link gambar!");
-        await fetch(`${DB_URL}/config.json`, { method: 'PATCH', body: JSON.stringify({ bg: url }) });
-        alert("Background Terupdate!");
-        muatData();
-    }
-
     async function tambahProduk() {
-        const name = document.getElementById('pName').value;
-        const price = document.getElementById('pPrice').value;
-        const img = document.getElementById('pImg').value;
-
-        if(!name || !price || !img) return alert("Lengkapi data!");
-
-        const item = { nama: name, harga: price, foto: img };
-        await fetch(`${DB_URL}/produk.json`, { method: 'POST', body: JSON.stringify(item) });
-        
-        document.getElementById('pName').value = "";
-        document.getElementById('pPrice').value = "";
-        document.getElementById('pImg').value = "";
-        alert("Produk Berhasil Online!");
-        muatData();
+        const payload = {
+            nama: document.getElementById('pName').value,
+            harga: document.getElementById('pPrice').value,
+            foto: document.getElementById('pImg').value,
+            benefit: document.getElementById('pBenefit').value
+        };
+        await fetch(`${DB_URL}/produk.json`, { method: 'POST', body: JSON.stringify(payload) });
+        location.reload(); 
     }
 
     async function hapus(id) {
-        if(confirm("Hapus produk ini?")) {
+        if(confirm("Hapus?")) {
             await fetch(`${DB_URL}/produk/${id}.json`, { method: 'DELETE' });
             muatData();
         }
     }
 
+    // Fungsi Pop Up Modal
+    function openModal(method, productName, productPrice) {
+        const modal = document.getElementById('paymentModal');
+        const title = document.getElementById('modalTitle');
+        const target = document.getElementById('targetNumber');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        modal.style.display = 'flex';
+
+        if(method === 'DANA') {
+            title.innerText = "Pembayaran DANA";
+            target.innerText = NO_DANA;
+        } else if(method === 'GOPAY') {
+            title.innerText = "Pembayaran GOPAY";
+            target.innerText = NO_GOPAY;
+        } else if(method === 'QRIS') {
+            title.innerText = "Pembayaran QRIS";
+            target.innerHTML = `<img src="${LINK_QRIS}" style="width:100%; border-radius:10px;">`;
+        }
+
+        // Setting Link WA saat tombol konfirmasi diklik
+        confirmBtn.onclick = () => {
+            const text = `*KONFIRMASI PEMBAYARAN*\n-----------\n📦 *Produk:* ${productName}\n💰 *Harga:* Rp ${Number(productPrice).toLocaleString()}\n💳 *Metode:* ${method}\n\nSaya sudah melakukan transfer, mohon diproses Min!`;
+            window.open(`https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(text)}`, '_blank');
+        };
+    }
+
+    function closeModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
+
     async function muatData() {
-        try {
-            const res = await fetch(`${DB_URL}/.json`);
-            const data = await res.json();
-
-            // Pasang Background
-            if(data?.config?.bg) {
-                document.body.style.backgroundImage = `url('${data.config.bg}')`;
-            }
-
-            // Tampilkan Produk
-            const etalase = document.getElementById('etalase');
-            etalase.innerHTML = "";
-            
-            if(data?.produk) {
-                Object.keys(data.produk).forEach(id => {
-                    const p = data.produk[id];
-                    const pesanWA = `Halo Abay, saya mau beli ${p.nama} seharga Rp ${Number(p.harga).toLocaleString()}`;
-                    const linkWA = `https://wa.me/${NOMOR_WA}?text=${encodeURIComponent(pesanWA)}`;
-
-                    etalase.innerHTML += `
-                        <div class="card">
-                            ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
-                            <img src="${p.foto}" onerror="this.src='https://placehold.co/400x400?text=Gambar+Error'">
-                            <div class="card-body">
-                                <strong>${p.nama}</strong>
-                                <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
-                                <a href="${linkWA}" target="_blank" class="btn-wa">Beli di WA</a>
+        const res = await fetch(`${DB_URL}/.json`);
+        const data = await res.json();
+        const etalase = document.getElementById('etalase');
+        etalase.innerHTML = "";
+        
+        if(data?.produk) {
+            Object.keys(data.produk).forEach(id => {
+                const p = data.produk[id];
+                etalase.innerHTML += `
+                    <div class="card">
+                        ${isAdmin ? `<button class="btn-del" onclick="hapus('${id}')">×</button>` : ''}
+                        <img src="${p.foto}" onerror="this.src='https://placehold.co/400x300?text=Gambar+Rusak'">
+                        <div class="card-body">
+                            <span class="card-title">${p.nama}</span>
+                            <span class="card-price">Rp ${Number(p.harga).toLocaleString()}</span>
+                            <div class="benefit-box"><strong>Benefit:</strong><br>${p.benefit ? p.benefit.replace(/\n/g, '<br>') : '-'}</div>
+                            
+                            <div class="pay-group">
+                                <button class="btn-pay btn-dana" onclick="openModal('DANA', '${p.nama}', '${p.harga}')">Bayar via DANA</button>
+                                <button class="btn-pay btn-gopay" onclick="openModal('GOPAY', '${p.nama}', '${p.harga}')">Bayar via GOPAY</button>
+                                <button class="btn-pay btn-qr" onclick="openModal('QRIS', '${p.nama}', '${p.harga}')">Bayar via QRIS</button>
                             </div>
-                        </div>`;
-                });
-            }
-        } catch (e) { console.log("Gagal muat data", e); }
+                        </div>
+                    </div>`;
+            });
+        }
     }
 
     muatData();
