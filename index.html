@@ -11,8 +11,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap');
         body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .admin-only { display: none; }
-        .is-admin .admin-only { display: block; }
         .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -110,94 +108,73 @@
 
     <script>
         const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/";
-        
-        // --- API KEY BARU MAS ABAY ---
         const GEMINI_KEY = "AIzaSyDjanGkO1X_oy8QMETuASpBUMsybzYviTE"; 
-
+        
         let isPlaying = false;
         const audio = document.getElementById('bg-audio');
 
         window.onload = () => { loadData(); loadStories(); };
 
-        // --- FUNGSI AI (UPDATED) ---
         function toggleAI() { document.getElementById('ai-window').classList.toggle('active'); }
 
+        // --- FUNGSI AI (FIXED VERSION) ---
         async function askAI() {
             const input = document.getElementById('ai-input');
             const box = document.getElementById('ai-messages');
             const msg = input.value.trim();
             if(!msg) return;
 
-            // 1. Tampilkan Chat User
             box.innerHTML += `<div class="user-bubble p-4 text-sm text-white max-w-[85%] ml-auto">${msg}</div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
 
-            // 2. Tampilkan Loading
             const loadId = 'ai-' + Date.now();
             box.innerHTML += `<div id="${loadId}" class="ai-bubble p-4 text-sm text-gray-500 animate-pulse italic">Sedang mengetik...</div>`;
             box.scrollTop = box.scrollHeight;
 
             try {
-                // 3. Kirim ke Google Gemini (Pakai Model Flash yang Cepat)
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
-                
-                const response = await fetch(url, {
+                // Menggunakan v1 dan gemini-pro yang lebih stabil di Vercel
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "Kamu adalah asisten Abay Studio. Jawab singkat dan gaul. Pertanyaan: " + msg }] }]
+                        contents: [{ parts: [{ text: "Kamu adalah asisten Abay Studio. Jawab gaul dan singkat: " + msg }] }]
                     })
                 });
 
                 const data = await response.json();
-
-                // 4. Cek Jika Ada Error dari Google
-                if (data.error) {
-                    throw new Error(data.error.message);
-                }
-
-                // 5. Ambil Jawaban
-                const aiResponse = data.candidates[0].content.parts[0].text;
                 
-                // 6. Tampilkan ke Layar
+                if (data.error) throw new Error(data.error.message);
+
+                const aiMsg = data.candidates[0].content.parts[0].text;
                 document.getElementById(loadId).remove();
-                // Ubah format bold markdown (**) jadi bold HTML (<b>)
-                const formattedResponse = aiResponse.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${formattedResponse}</div>`;
                 
+                const formattedRes = aiMsg.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${formattedRes}</div>`;
             } catch (err) {
-                console.error("Error AI:", err);
-                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-xs">Gagal: ${err.message}. Coba refresh!</span>`;
+                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-[10px]">Gagal: ${err.message}. Coba lagi nanti ya!</span>`;
             }
             box.scrollTop = box.scrollHeight;
         }
 
-        // --- FUNGSI UPLOAD ---
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
             const btn = document.getElementById('upload-btn');
             if(!fileInput.files[0]) return;
-            btn.disabled = true;
-            status.innerHTML = "⏳ Mengunggah...";
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
+            btn.disabled = true; status.innerHTML = "⏳ Mengunggah...";
+            const formData = new FormData(); formData.append('file', fileInput.files[0]);
             try {
                 const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
                 const data = await res.json();
                 if(data.status === 'success') {
                     const finalLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
                     status.innerHTML = `✅ Link: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
-                    Swal.fire('Sukses', 'File berhasil diupload', 'success');
+                    Swal.fire('Sukses', 'File berhasil diunggah', 'success');
                 } else { throw new Error(); }
-            } catch(e) {
-                status.innerHTML = "❌ Gagal upload";
-                Swal.fire('Gagal', 'Server sibuk', 'error');
-            } finally { btn.disabled = false; }
+            } catch(e) { status.innerHTML = "❌ Gagal upload"; } finally { btn.disabled = false; }
         }
 
-        // --- FUNGSI DATA ---
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
@@ -222,7 +199,7 @@
                 const list = document.getElementById('product-list'); list.innerHTML = '';
                 if(p) {
                     for(let id in p) {
-                        list.innerHTML += `<div class="glass p-3 rounded-3xl"><img src="${p[id].img}" class="h-32 w-full object-cover rounded-2xl mb-3"><h3 class="text-[10px] font-bold uppercase truncate">${p[id].name}</h3><p class="text-blue-500 font-black text-xs mt-1">Rp${parseInt(p[id].price).toLocaleString()}</p><button class="w-full bg-white text-black py-2 rounded-xl text-[9px] font-bold mt-3 hover:bg-gray-200 transition">BELI</button></div>`;
+                        list.innerHTML += `<div class="glass p-3 rounded-3xl"><img src="${p[id].img}" class="h-32 w-full object-cover rounded-2xl mb-3"><h3 class="text-[10px] font-bold uppercase truncate">${p[id].name}</h3><p class="text-blue-500 font-black text-xs mt-1">Rp${parseInt(p[id].price).toLocaleString()}</p><button class="w-full bg-white text-black py-2 rounded-xl text-[9px] font-bold mt-3 transition">BELI</button></div>`;
                     }
                 }
             } catch(e) {}
@@ -242,16 +219,16 @@
 
         async function downloadVideo() {
             const url = document.getElementById('dl-url').value;
-            if(!url) return Swal.fire('Oops', 'Mana linknya?', 'warning');
-            Swal.fire({ title: 'Loading...', didOpen: () => Swal.showLoading() });
+            if(!url) return Swal.fire('Oops', 'Masukkan link!', 'warning');
+            Swal.fire({ title: 'Scanning...', didOpen: () => Swal.showLoading() });
             try {
                 const response = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
                 const result = await response.json();
                 if (result.video) {
                     window.open(result.video.noWatermark || result.video.url, '_blank');
-                    Swal.fire('Sukses!', 'Video terbuka di tab baru', 'success');
+                    Swal.fire('Sukses!', 'Download dimulai.', 'success');
                 } else { throw new Error(); }
-            } catch (err) { Swal.fire('Gagal', 'Link salah atau server down', 'error'); }
+            } catch (err) { Swal.fire('Gagal', 'Server down atau link salah.', 'error'); }
         }
 
         function toggleMusic() { const icon = document.getElementById('music-icon'); if(isPlaying) { audio.pause(); icon.className = "fas fa-play"; } else { audio.play(); icon.className = "fas fa-pause"; } isPlaying = !isPlaying; }
