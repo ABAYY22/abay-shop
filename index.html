@@ -181,35 +181,34 @@
             }
         }
 
-        // --- SOLUSI UPLOAD FIX ---
+        // --- UPLOADER FIX (FILE.IO) ---
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
             if(!fileInput.files[0]) return;
             
-            status.innerText = "⏳ Sedang memproses upload...";
+            status.innerText = "⏳ Sedang mengunggah... Mohon tunggu.";
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
 
             try {
-                // Menggunakan API Pomf2 (Alternatif Catbox yang lebih ramah CORS tanpa proxy ribet)
-                const res = await fetch('https://pomf2.lain.la/upload.php', {
+                const res = await fetch('https://file.io', {
                     method: 'POST',
                     body: formData
                 });
                 const data = await res.json();
                 
                 if(data.success) {
-                    const url = data.files[0].url;
+                    const url = data.link;
                     status.innerHTML = `✅ Sukses: <a href="${url}" target="_blank" class="underline text-blue-400">${url}</a>`;
                     copy(url);
-                    Swal.fire('Berhasil', 'Link file telah disalin ke clipboard!', 'success');
+                    Swal.fire('Berhasil', 'Link file telah disalin!', 'success');
                 } else {
                     throw new Error("Gagal");
                 }
             } catch(e) { 
-                status.innerText = "❌ Upload gagal. Server sedang sibuk.";
-                Swal.fire('Gagal', 'Gagal upload. Coba ukuran file lebih kecil.', 'error');
+                status.innerText = "❌ Upload gagal. Coba lagi nanti.";
+                Swal.fire('Gagal', 'Terjadi kesalahan pada server uploader.', 'error');
             }
         }
 
@@ -218,20 +217,21 @@
             if(!url) return Swal.fire('Error', 'Paste the link first!', 'error');
             Swal.fire({ title: 'Processing...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             try {
-                const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${url}`);
+                // Menggunakan API baru yang lebih stabil
+                const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
                 const data = await res.json();
                 if(data.video || data.data) {
-                    const dlLink = data.video?.noWatermark || data.data?.video;
-                    window.open(dlLink);
+                    const dl = data.video?.noWatermark || data.data?.video;
+                    window.open(dl);
                     Swal.fire('Success', 'Download starting...', 'success');
                 } else { throw new Error(); }
-            } catch(e) { Swal.fire('Error', 'Link tidak valid atau server down.', 'error'); }
+            } catch(e) { Swal.fire('Error', 'Link tidak valid atau server sibuk.', 'error'); }
         }
 
         async function changeMusic() {
             const res = await fetch(dbUrl + "playlist.json");
             const playlist = await res.json();
-            if(!playlist) return Swal.fire('Info', 'Playlist kosong.', 'info');
+            if(!playlist) return Swal.fire('Info', 'Playlist belum diisi admin.', 'info');
             let options = {};
             for(let id in playlist) { options[playlist[id].url] = playlist[id].title; }
             const { value: url } = await Swal.fire({ title: 'Select Music', input: 'select', inputOptions: options, background: '#000', color: '#fff' });
@@ -245,7 +245,6 @@
             isPlaying = !isPlaying;
         }
 
-        // --- FUNGSI ADMIN & LAINNYA ---
         function adminLogin() {
             Swal.fire({ title: 'Pass?', input: 'password', background: '#000', color: '#fff' }).then(res => {
                 if(res.value === 'abay123') document.body.classList.add('is-admin');
@@ -274,7 +273,7 @@
         async function confirmPayment() {
             const time = new Date().toLocaleString();
             await fetch(dbUrl + "sales.json", { method: 'POST', body: JSON.stringify({ item: currentItem.n, price: currentItem.p, date: time, buyer: visitorName }) });
-            window.open(`https://wa.me/6287893344461?text=Halo Abay! Konfirmasi: ${currentItem.n} - Rp${currentItem.p.toLocaleString()}`);
+            window.open(`https://wa.me/6287893344461?text=Konfirmasi: ${currentItem.n} - Rp${currentItem.p.toLocaleString()}`);
             closeModal();
         }
         async function editHero() {
@@ -286,6 +285,18 @@
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2], desc: v[3] }) }); loadData(); }
         }
         async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
+        async function showVisitors() {
+            const r = await fetch(dbUrl + "visitors.json"); const v = await r.json();
+            let html = '<div class="text-left text-xs space-y-2 max-h-96 overflow-y-auto">';
+            for(let name in v) { html += `<div class="p-3 bg-white/5 rounded border border-white/5 flex justify-between"><div><p class="font-bold text-blue-400">${name}</p><p class="opacity-40 text-[9px]">${v[name].last_access}</p></div><div><p class="font-black text-lg">${v[name].count}</p></div></div>`; }
+            Swal.fire({ title: 'Visitors', html, background: '#000', color: '#fff' });
+        }
+        async function showSales() {
+            const r = await fetch(dbUrl + "sales.json"); const s = await r.json();
+            let html = '<div class="text-left text-[10px] space-y-1">'; let total = 0;
+            if(s) { for(let id in s) { total += parseInt(s[id].price); html += `<div class="p-2 bg-white/5 rounded"><b>${s[id].buyer}</b> - ${s[id].item}</div>`; } }
+            Swal.fire({ title: 'Sales', html: html + `<div class="mt-4 text-xl">Total: Rp ${total.toLocaleString()}</div>`, background: '#000', color: '#fff' });
+        }
         function closeModal() { document.getElementById('pay-modal').classList.add('hidden'); }
         function copy(t) { navigator.clipboard.writeText(t); Swal.fire({ toast: true, position: 'top', title: 'Copied!', showConfirmButton: false, timer: 1000 }); }
     </script>
