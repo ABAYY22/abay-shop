@@ -64,9 +64,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-red-500">
                     <h3 class="font-black uppercase mb-2 flex items-center gap-2"><i class="fab fa-tiktok text-red-500"></i> Video Downloader</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase">TikTok, IG, FB & More</p>
+                    <p class="text-[10px] opacity-40 mb-6 uppercase">TikTok Support</p>
                     <div class="flex flex-col gap-3">
-                        <input id="dl-url" type="text" placeholder="Masukkan Link Video..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs focus:outline-none">
+                        <input id="dl-url" type="text" placeholder="Masukkan Link TikTok..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs focus:outline-none">
                         <button onclick="downloadVideo()" class="bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Download Now</button>
                     </div>
                 </div>
@@ -148,49 +148,81 @@
             } catch(e) {}
         }
 
+        async function downloadVideo() {
+            const url = document.getElementById('dl-url').value;
+            if(!url) return Swal.fire('Oops!', 'Masukkan Link TikTok!', 'warning');
+            
+            Swal.fire({ 
+                title: 'Mencari Video...', 
+                html: 'Tunggu sebentar, sedang memproses...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading() 
+            });
+
+            try {
+                const response = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+                
+                if (data && data.video && data.video.noWatermark) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Video siap didownload',
+                        confirmButtonText: 'Download Sekarang',
+                        confirmButtonColor: '#2563eb'
+                    }).then(() => {
+                        window.open(data.video.noWatermark, '_blank');
+                    });
+                } else if (data.video && data.video.url) {
+                    window.open(data.video.url, '_blank');
+                    Swal.close();
+                } else {
+                    throw new Error('Data tidak lengkap');
+                }
+            } catch (err) {
+                Swal.fire('Gagal', 'Link tidak valid atau server sedang sibuk.', 'error');
+            }
+        }
+
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
             const btn = document.getElementById('upload-btn');
             if(!fileInput.files[0]) return;
-            btn.disabled = true;
-            status.innerHTML = "⏳ Mengunggah ke Cloud...";
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            try {
-                const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
-                const data = await res.json();
-                if(data.status === 'success') {
-                    const finalLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
-                    status.innerHTML = `✅ Link: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
-                    Swal.fire('Berhasil!', 'File tersimpan di cloud.', 'success');
-                } else { throw new Error(); }
-            } catch(e) {
-                status.innerHTML = "❌ Gagal mengunggah.";
-                Swal.fire('Error', 'Coba lagi nanti.', 'error');
-            } finally { btn.disabled = false; }
-        }
 
-        async function downloadVideo() {
-            const url = document.getElementById('dl-url').value;
-            if(!url) return Swal.fire('Oops!', 'Tempel link dulu!', 'warning');
-            Swal.fire({ title: 'Mencari Video...', didOpen: () => Swal.showLoading() });
+            btn.disabled = true;
+            status.innerHTML = "⏳ Sedang mengunggah...";
+            
+            const formData = new FormData();
+            formData.append('fileToUpload', fileInput.files[0]);
+            formData.append('reqtype', 'fileupload');
+
             try {
-                const res = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
+                // Menggunakan Catbox API yang lebih stabil
+                const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+                    method: 'POST',
+                    body: formData
+                });
                 const data = await res.json();
-                const videoUrl = data.video?.noWatermark || data.video?.url || data.video;
-                if(videoUrl) {
-                    window.open(videoUrl);
-                    Swal.fire('Berhasil!', 'Video ditemukan.', 'success');
-                } else { throw new Error(); }
+                
+                if(data.status === 'success') {
+                    const finalLink = data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+                    status.innerHTML = `✅ Berhasil: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
+                    Swal.fire('Berhasil!', 'File sudah menjadi link.', 'success');
+                } else {
+                    throw new Error();
+                }
             } catch(e) {
-                Swal.fire('Gagal', 'Link tidak valid atau privat.', 'error');
+                status.innerHTML = "❌ Upload gagal. Server sedang sibuk.";
+                Swal.fire('Gagal', 'Coba gunakan file dengan ukuran lebih kecil.', 'error');
+            } finally {
+                btn.disabled = false;
             }
         }
 
         function choosePayment(name, price) {
             Swal.fire({
-                title: 'Pilih Metode Bayar',
+                title: 'Metode Bayar',
                 background: '#0a0a0a',
                 color: '#fff',
                 showCancelButton: true,
@@ -217,10 +249,10 @@
                 if(method) {
                     Swal.fire({
                         title: 'Pembayaran ' + method,
-                        html: payContent + `<p class="text-xs mt-6 opacity-50 uppercase font-bold tracking-widest">Klik konfirmasi jika sudah membayar</p>`,
+                        html: payContent + `<p class="text-xs mt-6 opacity-50 uppercase font-bold tracking-widest">Konfirmasi via WA setelah bayar</p>`,
                         background: '#0a0a0a',
                         color: '#fff',
-                        confirmButtonText: 'SAYA SUDAH BAYAR',
+                        confirmButtonText: 'KONFIRMASI WA',
                         confirmButtonColor: '#2563eb'
                     }).then(() => {
                         const waMsg = `Halo Abay! Konfirmasi Pembayaran:\n🛒 Item: ${name}\n💰 Harga: Rp ${price.toLocaleString()}\n💳 Metode: ${method}\n\nSaya sudah bayar, tolong diproses!`;
@@ -260,10 +292,9 @@
             document.body.style.overflow = 'auto';
         }
 
-        // --- ADMIN FUNCTIONS ---
         function adminLogin() {
-            Swal.fire({ title: 'Password Admin?', input: 'password', background: '#0a0a0a', color: '#fff' }).then(res => {
-                if(res.value === 'abay123') { document.body.classList.add('is-admin'); Swal.fire('Akses Admin Aktif', '', 'success'); }
+            Swal.fire({ title: 'Admin Access', input: 'password', background: '#0a0a0a', color: '#fff' }).then(res => {
+                if(res.value === 'abay123') { document.body.classList.add('is-admin'); Swal.fire('Welcome Admin!', '', 'success'); }
             });
         }
         function toggleMusic() {
@@ -275,7 +306,7 @@
         async function changeMusic() {
             const res = await fetch(dbUrl + "playlist.json"); const p = await res.json();
             let opt = {}; for(let id in p) opt[p[id].url] = p[id].title;
-            const { value: url } = await Swal.fire({ title: 'Pilih Lagu', input: 'select', inputOptions: opt, background: '#0a0a0a', color: '#fff' });
+            const { value: url } = await Swal.fire({ title: 'Playlist', input: 'select', inputOptions: opt, background: '#0a0a0a', color: '#fff' });
             if(url) { audio.src = url; audio.play(); isPlaying = true; document.getElementById('music-icon').className = "fas fa-pause"; }
         }
         async function editHero() {
@@ -283,14 +314,13 @@
             if(v) { await fetch(dbUrl + "hero.json", { method: 'PUT', body: JSON.stringify(v) }); loadData(); }
         }
         async function addStory() {
-            const { value: v } = await Swal.fire({ title: 'Tulis Cerita', background: '#0a0a0a', color: '#fff', html: '<input id="st-t" class="swal2-input" placeholder="Judul"><select id="st-c" class="swal2-input"><option value="CERPEN">Cerpen</option><option value="DEVLOG">DevLog</option><option value="RANDOM">Random</option></select><textarea id="st-x" class="swal2-textarea" placeholder="Isi cerita..."></textarea>', preConfirm: () => ({ title: document.getElementById('st-t').value, category: document.getElementById('st-c').value, content: document.getElementById('st-x').value }) });
-            if(v && v.title) { await fetch(dbUrl + "stories.json", { method: 'POST', body: JSON.stringify(v) }); loadStories(); }
+            const { value: v } = await Swal.fire({ title: 'New Story', background: '#0a0a0a', color: '#fff', html: '<input id="st-t" class="swal2-input" placeholder="Judul"><select id="st-c" class="swal2-input"><option value="DEVLOG">DevLog</option><option value="STORY">Story</option></select><textarea id="st-x" class="swal2-textarea" placeholder="Content..."></textarea>', preConfirm: () => ({ title: document.getElementById('st-t').value, category: document.getElementById('st-c').value, content: document.getElementById('st-x').value }) });
+            if(v) { await fetch(dbUrl + "stories.json", { method: 'POST', body: JSON.stringify(v) }); loadStories(); }
         }
         async function addProduct() {
-            const { value: v } = await Swal.fire({ title: 'Add Item', html: '<input id="n" class="swal2-input" placeholder="Nama"><input id="p" class="swal2-input" type="number" placeholder="Harga"><input id="i" class="swal2-input" placeholder="Image URL">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value] });
+            const { value: v } = await Swal.fire({ title: 'New Item', html: '<input id="n" class="swal2-input" placeholder="Name"><input id="p" class="swal2-input" type="number" placeholder="Price"><input id="i" class="swal2-input" placeholder="Image URL">', preConfirm: () => [document.getElementById('n').value, document.getElementById('p').value, document.getElementById('i').value] });
             if(v) { await fetch(dbUrl + "products.json", { method: 'POST', body: JSON.stringify({ name: v[0], price: v[1], img: v[2] }) }); loadData(); }
         }
-        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
         async function delProduct(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}products/${id}.json`, { method: 'DELETE' }); loadData(); } }
         async function deleteStory(id) { if(confirm('Hapus?')) { await fetch(`${dbUrl}stories/${id}.json`, { method: 'DELETE' }); loadStories(); } }
         async function managePlaylist() {
@@ -300,9 +330,10 @@
             Swal.fire({ title: 'Playlist', html: html + '<button onclick="addSong()" class="mt-4 bg-blue-600 px-4 py-2 rounded-xl text-xs">ADD SONG</button>', background: '#0a0a0a', color: '#fff' });
         }
         async function addSong() {
-            const { value: v } = await Swal.fire({ title: 'New Song', html: '<input id="st" class="swal2-input" placeholder="Judul"><input id="su" class="swal2-input" placeholder="Link MP3">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
+            const { value: v } = await Swal.fire({ title: 'New Song', html: '<input id="st" class="swal2-input" placeholder="Title"><input id="su" class="swal2-input" placeholder="MP3 Link">', preConfirm: () => [document.getElementById('st').value, document.getElementById('su').value] });
             if(v) { await fetch(dbUrl + "playlist.json", { method: 'POST', body: JSON.stringify({ title: v[0], url: v[1] }) }); managePlaylist(); }
         }
+        async function deleteSong(id) { await fetch(`${dbUrl}playlist/${id}.json`, { method: 'DELETE' }); managePlaylist(); }
     </script>
 </body>
 </html>
