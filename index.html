@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +18,7 @@
         .nav-tab.active { background: #2563eb; color: white; border-color: #2563eb; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* AI UI - GEMINI STYLE */
+        /* AI UI */
         #ai-window { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(20px); opacity: 0; pointer-events: none; visibility: hidden; }
         #ai-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; visibility: visible; }
         .gemini-gradient { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -55,69 +56,48 @@
         <div id="stories" class="tab-content active">
             <div id="story-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
-
         <div id="tools" class="tab-content">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-red-500">
-                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm"><i class="fab fa-tiktok text-red-500"></i> Video Downloader</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase tracking-widest">TikTok No Watermark</p>
-                    <input id="dl-url" type="text" placeholder="Tempel link video..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs focus:outline-none mb-4 text-white">
+                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm">Video Downloader</h3>
+                    <input id="dl-url" type="text" placeholder="Link TikTok..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs mb-4 text-white">
                     <button onclick="downloadVideo()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Download</button>
-                </div>
-                <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500">
-                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm"><i class="fas fa-link text-blue-500"></i> Link Generator</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase tracking-widest">Upload File (Max 1GB)</p>
-                    <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
-                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Select & Upload</button>
-                    <div id="upload-status" class="mt-4 text-center text-[10px] font-bold break-all text-blue-400"></div>
                 </div>
             </div>
         </div>
-
         <div id="shop" class="tab-content">
             <div id="product-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
         </div>
     </main>
 
-    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10 hover:border-blue-500 transition-all">
-        <svg class="w-8 h-8" viewBox="0 0 24 24"><path d="M12 2L14.85 9.15L22 12L14.85 14.85L12 22L9.15 14.85L2 12L9.15 9.15L12 2Z" fill="url(#gradAI)"/><defs><linearGradient id="gradAI" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs></svg>
+    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10">
+        <i class="fas fa-robot text-blue-500"></i>
     </div>
 
     <div id="ai-window" class="fixed bottom-24 right-6 w-[92%] md:w-[400px] h-[70vh] bg-[#0f0f0f] rounded-[2rem] flex flex-col z-[101] border border-white/10 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-white/5 bg-[#161616] flex justify-between items-center">
             <span class="text-sm font-bold gemini-gradient italic">Gemini Abay Studio</span>
-            <button onclick="toggleAI()" class="text-white/30 hover:text-white"><i class="fas fa-times"></i></button>
+            <button onclick="toggleAI()"><i class="fas fa-times"></i></button>
         </div>
         <div id="ai-messages" class="flex-1 p-6 overflow-y-auto flex flex-col space-y-4 no-scrollbar">
-            <div class="ai-bubble p-4 text-sm text-gray-200 leading-relaxed max-w-[85%]">Halo Mas Abay! Ada yang bisa saya bantu hari ini?</div>
+            <div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">Halo Mas Abay! Semoga kali ini lancar ya. Ada yang bisa saya bantu?</div>
         </div>
         <div class="p-4 bg-[#161616] border-t border-white/5">
             <div class="relative flex items-center">
-                <input id="ai-input" type="text" placeholder="Ketik pesan..." class="w-full bg-[#2b2b2b] border-none rounded-2xl px-5 py-4 pr-12 text-sm text-white focus:ring-1 focus:ring-blue-500 outline-none transition" onkeypress="if(event.key === 'Enter') askAI()">
-                <button onclick="askAI()" class="absolute right-3 text-blue-500 hover:text-white transition"><i class="fas fa-paper-plane"></i></button>
+                <input id="ai-input" type="text" placeholder="Ketik pesan..." class="w-full bg-[#2b2b2b] rounded-2xl px-5 py-4 text-sm text-white outline-none" onkeypress="if(event.key === 'Enter') askAI()">
+                <button onclick="askAI()" class="absolute right-3 text-blue-500"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 glass px-8 py-4 rounded-full z-[100] border border-white/20">
-        <button onclick="toggleMusic()" class="text-white hover:text-blue-500 transition w-6"><i id="music-icon" class="fas fa-play"></i></button>
-        <div class="w-[1px] h-4 bg-white/20"></div>
-        <button class="text-[9px] font-bold uppercase tracking-widest opacity-60">Playlist</button>
-    </div>
-    <audio id="bg-audio" loop></audio>
-
     <script>
         const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/";
         const GEMINI_KEY = "AIzaSyDjanGkO1X_oy8QMETuASpBUMsybzYviTE"; 
-        
-        let isPlaying = false;
-        const audio = document.getElementById('bg-audio');
 
         window.onload = () => { loadData(); loadStories(); };
 
         function toggleAI() { document.getElementById('ai-window').classList.toggle('active'); }
 
-        // --- FUNGSI AI (FIXED VERSION) ---
         async function askAI() {
             const input = document.getElementById('ai-input');
             const box = document.getElementById('ai-messages');
@@ -129,50 +109,60 @@
             box.scrollTop = box.scrollHeight;
 
             const loadId = 'ai-' + Date.now();
-            box.innerHTML += `<div id="${loadId}" class="ai-bubble p-4 text-sm text-gray-500 animate-pulse italic">Sedang mengetik...</div>`;
+            box.innerHTML += `<div id="${loadId}" class="ai-bubble p-4 text-sm text-gray-500 animate-pulse italic">Memproses...</div>`;
             box.scrollTop = box.scrollHeight;
 
             try {
-                // Menggunakan v1 dan gemini-pro yang lebih stabil di Vercel
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_KEY}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "Kamu adalah asisten Abay Studio. Jawab gaul dan singkat: " + msg }] }]
+                        contents: [{ parts: [{ text: msg }] }]
                     })
                 });
 
                 const data = await response.json();
                 
-                if (data.error) throw new Error(data.error.message);
+                if (data.error) { throw new Error(data.error.message); }
 
                 const aiMsg = data.candidates[0].content.parts[0].text;
                 document.getElementById(loadId).remove();
+                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${aiMsg}</div>`;
                 
-                const formattedRes = aiMsg.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${formattedRes}</div>`;
             } catch (err) {
-                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-[10px]">Gagal: ${err.message}. Coba lagi nanti ya!</span>`;
+                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-[10px]">Error: ${err.message}. Coba refresh!</span>`;
             }
             box.scrollTop = box.scrollHeight;
         }
 
-        async function uploadFile() {
-            const fileInput = document.getElementById('file-input');
-            const status = document.getElementById('upload-status');
-            const btn = document.getElementById('upload-btn');
-            if(!fileInput.files[0]) return;
-            btn.disabled = true; status.innerHTML = "⏳ Mengunggah...";
-            const formData = new FormData(); formData.append('file', fileInput.files[0]);
+        // --- FITUR DOWNLOAD TIKTOK BARU (MENGGUNAKAN API CLOUDHOSTID) ---
+        async function downloadVideo() {
+            const url = document.getElementById('dl-url').value;
+            if(!url) return Swal.fire('Oops', 'Mana linknya?', 'warning');
+
+            Swal.fire({ title: 'Mencari Video...', didOpen: () => Swal.showLoading() });
+
             try {
-                const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
-                const data = await res.json();
-                if(data.status === 'success') {
-                    const finalLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
-                    status.innerHTML = `✅ Link: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
-                    Swal.fire('Sukses', 'File berhasil diunggah', 'success');
-                } else { throw new Error(); }
-            } catch(e) { status.innerHTML = "❌ Gagal upload"; } finally { btn.disabled = false; }
+                // Menggunakan API cloudhostid sesuai permintaan
+                const response = await fetch(`https://api.cloudhostid.biz.id/tiktok/dl?url=${url}`);
+                const data = await response.json();
+
+                // Cek hasil dari API (biasanya ada di data.result)
+                if (data.result && data.result.url_nowm) {
+                    window.open(data.result.url_nowm, '_blank');
+                    Swal.fire('Sukses!', 'Video berhasil ditemukan.', 'success');
+                } else if (data.url_nowm) {
+                    // Cadangan jika format JSON berbeda
+                    window.open(data.url_nowm, '_blank');
+                    Swal.fire('Sukses!', 'Video berhasil ditemukan.', 'success');
+                } else {
+                    throw new Error('Gagal mengambil data');
+                }
+            } catch (err) {
+                // Jika API cloudhostid error, tampilkan pesan
+                console.error(err);
+                Swal.fire('Gagal', 'Link salah atau server sedang sibuk.', 'error');
+            }
         }
 
         function openTab(tabId) {
@@ -193,14 +183,6 @@
                     document.getElementById('p-skill').innerText = h.skill || '-';
                     document.getElementById('p-sekolah').innerText = h.sekolah || '-';
                     document.getElementById('p-alamat').innerText = h.alamat || '-';
-                    if(h.music) audio.src = h.music;
-                }
-                const pRes = await fetch(dbUrl + "products.json"); const p = await pRes.json();
-                const list = document.getElementById('product-list'); list.innerHTML = '';
-                if(p) {
-                    for(let id in p) {
-                        list.innerHTML += `<div class="glass p-3 rounded-3xl"><img src="${p[id].img}" class="h-32 w-full object-cover rounded-2xl mb-3"><h3 class="text-[10px] font-bold uppercase truncate">${p[id].name}</h3><p class="text-blue-500 font-black text-xs mt-1">Rp${parseInt(p[id].price).toLocaleString()}</p><button class="w-full bg-white text-black py-2 rounded-xl text-[9px] font-bold mt-3 transition">BELI</button></div>`;
-                    }
                 }
             } catch(e) {}
         }
@@ -209,29 +191,13 @@
             try {
                 const res = await fetch(dbUrl + "stories.json"); const data = await res.json();
                 const container = document.getElementById('story-list'); container.innerHTML = '';
-                if(data){
+                if(data) {
                     for(let id in data) {
-                        container.innerHTML += `<div class="glass p-6 rounded-[2rem]"><span class="text-[8px] font-bold text-blue-500 uppercase">${data[id].category}</span><h3 class="font-bold uppercase mt-2">${data[id].title}</h3><p class="text-[10px] opacity-40 mt-3 line-clamp-2">${data[id].content}</p></div>`;
+                        container.innerHTML += `<div class="glass p-6 rounded-[2rem]"><h3 class="font-bold uppercase">${data[id].title}</h3><p class="text-[10px] opacity-40 mt-3">${data[id].content}</p></div>`;
                     }
                 }
             } catch(e) {}
         }
-
-        async function downloadVideo() {
-            const url = document.getElementById('dl-url').value;
-            if(!url) return Swal.fire('Oops', 'Masukkan link!', 'warning');
-            Swal.fire({ title: 'Scanning...', didOpen: () => Swal.showLoading() });
-            try {
-                const response = await fetch(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(url)}`);
-                const result = await response.json();
-                if (result.video) {
-                    window.open(result.video.noWatermark || result.video.url, '_blank');
-                    Swal.fire('Sukses!', 'Download dimulai.', 'success');
-                } else { throw new Error(); }
-            } catch (err) { Swal.fire('Gagal', 'Server down atau link salah.', 'error'); }
-        }
-
-        function toggleMusic() { const icon = document.getElementById('music-icon'); if(isPlaying) { audio.pause(); icon.className = "fas fa-play"; } else { audio.play(); icon.className = "fas fa-pause"; } isPlaying = !isPlaying; }
     </script>
 </body>
 </html>
