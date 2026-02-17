@@ -18,17 +18,16 @@
         .admin-only { display: none; }
         .is-admin .admin-only { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        #ai-window { transition: all 0.3s; transform: translateY(20px); opacity: 0; pointer-events: none; visibility: hidden; }
-        #ai-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; visibility: visible; }
+        #ai-window, #playlist-window { transition: all 0.3s; transform: translateY(20px); opacity: 0; pointer-events: none; visibility: hidden; }
+        #ai-window.active, #playlist-window.active { transform: translateY(0); opacity: 1; pointer-events: auto; visibility: visible; }
         .gemini-gradient { background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .ai-bubble { background: #1e1e1e; border-radius: 1.2rem; border-top-left-radius: 0.2rem; align-self: flex-start; }
-        .user-bubble { background: #2b2b2b; border-radius: 1.2rem; border-top-right-radius: 0.2rem; align-self: flex-end; }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
 
-    <section class="pt-10 pb-6 px-6 relative">
-        <button onclick="loginAdmin()" class="absolute top-4 right-4 text-[8px] opacity-20 hover:opacity-100 uppercase tracking-widest font-bold">Admin Panel</button>
+    <button onclick="loginAdmin()" class="fixed top-4 right-4 z-50 text-[8px] opacity-20 hover:opacity-100 uppercase font-bold">Admin</button>
+
+    <section class="pt-10 pb-6 px-6">
         <div class="max-w-4xl mx-auto glass p-8 rounded-[2.5rem] flex flex-col md:flex-row gap-8 items-center">
             <div class="relative group">
                 <img id="p-foto" src="https://ui-avatars.com/api/?name=Abay" class="w-32 h-32 md:w-40 md:h-40 rounded-[2rem] object-cover border-2 border-white/10 shadow-2xl">
@@ -40,7 +39,7 @@
                     <button onclick="editProfile('nama')" class="admin-only text-xs opacity-50"><i class="fas fa-edit"></i></button>
                 </div>
                 <p id="p-bio" onclick="editProfile('bio')" class="text-xs opacity-50 font-bold tracking-widest uppercase mt-1 mb-4 cursor-pointer">Waiting For You</p>
-                <div class="grid grid-cols-2 gap-3 text-[10px] uppercase font-bold tracking-tight text-center">
+                <div class="grid grid-cols-2 gap-3 text-[10px] uppercase font-bold text-center">
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5 cursor-pointer" onclick="editProfile('hobi')"><span class="opacity-40 block">Hobi</span><span id="p-hobi">-</span></div>
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5 cursor-pointer" onclick="editProfile('skill')"><span class="opacity-40 block">Skill</span><span id="p-skill">-</span></div>
                     <div class="bg-white/5 p-2 rounded-xl border border-white/5 cursor-pointer" onclick="editProfile('sekolah')"><span class="opacity-40 block">Sekolah</span><span id="p-sekolah">-</span></div>
@@ -50,7 +49,7 @@
         </div>
     </section>
 
-    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-xl py-4 border-y border-white/5 mb-10">
+    <nav class="sticky top-0 z-40 bg-black/80 backdrop-blur-xl py-4 border-y border-white/5 mb-10">
         <div class="flex justify-center gap-3 px-4 overflow-x-auto no-scrollbar">
             <button onclick="openTab('stories')" class="nav-tab active px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10">Stories</button>
             <button onclick="openTab('tools')" class="nav-tab px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition border border-white/10">Tools</button>
@@ -58,7 +57,7 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-6 pb-40">
+    <main class="max-w-6xl mx-auto px-6 pb-48">
         <div id="stories" class="tab-content active">
             <button onclick="addStory()" class="admin-only w-full mb-6 border-2 border-dashed border-white/10 p-4 rounded-2xl text-[10px] uppercase font-bold opacity-50 hover:opacity-100">+ Tambah Story</button>
             <div id="story-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
@@ -74,7 +73,7 @@
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500">
                     <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm"><i class="fas fa-link"></i> Link Generator</h3>
                     <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
-                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase">Upload File</button>
+                    <button onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase">Upload File</button>
                     <div id="upload-status" class="mt-4 text-center text-[10px] font-bold break-all text-blue-400"></div>
                 </div>
             </div>
@@ -86,25 +85,36 @@
         </div>
     </main>
 
+    <div id="playlist-window" class="fixed bottom-28 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-[#161616] glass rounded-[2rem] z-[101] p-6 shadow-2xl overflow-hidden">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-blue-500">Daftar Musik</span>
+            <button onclick="togglePlaylist()"><i class="fas fa-times opacity-30"></i></button>
+        </div>
+        <div id="playlist-list" class="max-h-[300px] overflow-y-auto space-y-2 no-scrollbar">
+            </div>
+    </div>
+
     <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] w-[90%] max-w-md">
         <div class="glass p-4 rounded-3xl flex items-center gap-4 border-white/10 shadow-2xl">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center animate-pulse"><i class="fas fa-music text-white text-xs"></i></div>
+            <button onclick="togglePlaylist()" class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-white/10">
+                <i class="fas fa-list-ul text-xs"></i>
+            </button>
             <div class="flex-1 overflow-hidden">
-                <div id="track-title" class="text-[9px] font-bold uppercase truncate">Memutar...</div>
+                <div id="track-title" class="text-[9px] font-bold uppercase truncate">Memilih Lagu...</div>
                 <div class="flex items-center gap-3 mt-1">
                     <button onclick="prevTrack()"><i class="fas fa-step-backward text-[10px]"></i></button>
                     <button id="play-btn" onclick="togglePlay()"><i class="fas fa-play text-[10px]"></i></button>
                     <button onclick="nextTrack()"><i class="fas fa-step-forward text-[10px]"></i></button>
                 </div>
             </div>
-            <button onclick="addMusic()" class="admin-only bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/20 transition">
+            <button onclick="addMusic()" class="admin-only bg-blue-600/20 w-8 h-8 rounded-lg flex items-center justify-center">
                 <i class="fas fa-plus text-[10px]"></i>
             </button>
             <audio id="audio-player"></audio>
         </div>
     </div>
 
-    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center z-[100] border border-white/10 cursor-pointer">
+    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center z-[100] border border-white/10">
         <i class="fas fa-robot text-blue-500"></i>
     </div>
     <div id="ai-window" class="fixed bottom-24 right-6 w-[92%] md:w-[400px] h-[70vh] bg-[#0f0f0f] rounded-[2rem] flex flex-col z-[101] border border-white/10 overflow-hidden shadow-2xl">
@@ -112,7 +122,7 @@
         <div id="ai-messages" class="flex-1 p-6 overflow-y-auto flex flex-col space-y-4 no-scrollbar"></div>
         <div class="p-4 bg-[#161616] border-t border-white/5 flex gap-2">
             <input id="ai-input" type="text" placeholder="Tanya sesuatu..." class="flex-1 bg-[#2b2b2b] rounded-xl px-4 py-3 text-sm outline-none" onkeypress="if(event.key === 'Enter') askAI()">
-            <button onclick="askAI()" class="text-blue-500 px-2"><i class="fas fa-paper-plane"></i></button>
+            <button onclick="askAI()" class="text-blue-500"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -127,68 +137,39 @@
         window.onload = () => { loadData(); loadStories(); loadProducts(); loadMusic(); };
 
         function loginAdmin() {
-            Swal.fire({ title: 'Admin Login', input: 'password', showCancelButton: true }).then((res) => {
+            Swal.fire({ title: 'Admin Login', input: 'password' }).then((res) => {
                 if(res.value === 'abayganteng') { 
                     isAdmin = true;
                     document.body.classList.add('is-admin');
-                    Swal.fire('Halo Admin!', 'Tombol edit sudah aktif.', 'success');
-                    loadStories(); loadProducts(); // Refresh to show delete buttons
-                } else if(res.value) {
-                    Swal.fire('Password Salah!', '', 'error');
+                    Swal.fire('Admin Aktif!', '', 'success');
+                    loadStories(); loadProducts(); loadMusic();
                 }
             });
         }
 
-        // --- MANAJEMEN DATA PROFIL ---
-        async function editProfile(field) {
-            if(!isAdmin) return;
-            const { value: newVal } = await Swal.fire({ title: `Ganti ${field}`, input: 'text' });
-            if(newVal) {
-                await fetch(`${dbUrl}hero/${field}.json`, { method: 'PUT', body: JSON.stringify(newVal) });
-                loadData();
-            }
-        }
-
-        // --- MANAJEMEN STORIES ---
-        async function addStory() {
-            const { value: form } = await Swal.fire({
-                title: 'Story Baru',
-                html: '<input id="s-t" class="swal2-input" placeholder="Judul Story"><textarea id="s-c" class="swal2-textarea" placeholder="Isi Story"></textarea>',
-                preConfirm: () => ({ title: document.getElementById('s-t').value, content: document.getElementById('s-c').value })
-            });
-            if(form.title) { await fetch(`${dbUrl}stories.json`, { method: 'POST', body: JSON.stringify(form) }); loadStories(); }
-        }
-
-        // --- MANAJEMEN PRODUK ---
-        async function addProduct() {
-            const { value: f } = await Swal.fire({
-                title: 'Produk Baru',
-                html: '<input id="p-n" class="swal2-input" placeholder="Nama Barang"><input id="p-h" class="swal2-input" placeholder="Harga"><input id="p-g" class="swal2-input" placeholder="Link Gambar"><input id="p-w" class="swal2-input" placeholder="WhatsApp (628xxx)">',
-                preConfirm: () => ({ name: document.getElementById('p-n').value, price: document.getElementById('p-h').value, image: document.getElementById('p-g').value, whatsapp: document.getElementById('p-w').value })
-            });
-            if(f.name) { await fetch(`${dbUrl}products.json`, { method: 'POST', body: JSON.stringify(f) }); loadProducts(); }
-        }
-
-        // --- MANAJEMEN MUSIK (FITUR BARU) ---
-        async function addMusic() {
-            if(!isAdmin) return;
-            const { value: m } = await Swal.fire({
-                title: 'Tambah Lagu Baru',
-                html: '<input id="m-t" class="swal2-input" placeholder="Judul Lagu"><input id="m-u" class="swal2-input" placeholder="URL mp3 (Dropbox/GoogleDrive Link)">',
-                preConfirm: () => ({ title: document.getElementById('m-t').value, url: document.getElementById('m-u').value })
-            });
-            if(m.title && m.url) {
-                await fetch(`${dbUrl}music.json`, { method: 'POST', body: JSON.stringify(m) });
-                loadMusic();
-                Swal.fire('Sukses!', 'Lagu ditambahkan.', 'success');
-            }
-        }
-
+        // --- MUSIC PLAYER LOGIC ---
         async function loadMusic() {
-            const r = await fetch(dbUrl + "music.json"); 
+            const r = await fetch(dbUrl + "music.json");
             const d = await r.json();
             tracks = [];
-            for(let id in d) { tracks.push({ ...d[id], id }); }
+            const listC = document.getElementById('playlist-list');
+            listC.innerHTML = '';
+            
+            for(let id in d) {
+                const track = { ...d[id], id };
+                tracks.push(track);
+                
+                // Create Playlist Item
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-white/5 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition";
+                item.innerHTML = `
+                    <div class="flex-1" onclick="selectTrack(${tracks.length-1})">
+                        <p class="text-[10px] font-bold uppercase truncate">${track.title}</p>
+                    </div>
+                    ${isAdmin ? `<button onclick="deleteData('music/${id}')" class="text-red-500 text-[10px] ml-2"><i class="fas fa-trash"></i></button>` : ''}
+                `;
+                listC.appendChild(item);
+            }
             if(tracks.length > 0) setupMusic(0);
         }
 
@@ -198,22 +179,96 @@
             document.getElementById('track-title').innerText = tracks[i].title;
         }
 
-        function togglePlay() {
+        function selectTrack(i) {
+            setupMusic(i);
+            togglePlaylist();
+            togglePlay(true);
+        }
+
+        function togglePlay(forcePlay = false) {
             const btn = document.getElementById('play-btn');
-            if(player.paused) { player.play(); btn.innerHTML = '<i class="fas fa-pause text-[10px]"></i>'; }
-            else { player.pause(); btn.innerHTML = '<i class="fas fa-play text-[10px]"></i>'; }
+            if(player.paused || forcePlay) { 
+                player.play(); 
+                btn.innerHTML = '<i class="fas fa-pause text-[10px]"></i>'; 
+            } else { 
+                player.pause(); 
+                btn.innerHTML = '<i class="fas fa-play text-[10px]"></i>'; 
+            }
         }
 
         function nextTrack() { currentTrackIdx = (currentTrackIdx + 1) % tracks.length; setupMusic(currentTrackIdx); player.play(); }
         function prevTrack() { currentTrackIdx = (currentTrackIdx - 1 + tracks.length) % tracks.length; setupMusic(currentTrackIdx); player.play(); }
+        function togglePlaylist() { document.getElementById('playlist-window').classList.toggle('active'); }
 
-        // --- LOADING DATA ---
+        async function addMusic() {
+            const { value: m } = await Swal.fire({
+                title: 'Lagu Baru',
+                html: '<input id="m-t" class="swal2-input" placeholder="Judul"><input id="m-u" class="swal2-input" placeholder="URL mp3">',
+                preConfirm: () => ({ title: document.getElementById('m-t').value, url: document.getElementById('m-u').value })
+            });
+            if(m.title && m.url) { await fetch(`${dbUrl}music.json`, { method: 'POST', body: JSON.stringify(m) }); loadMusic(); }
+        }
+
+        // --- MANAJEMEN DATA ---
+        async function editProfile(field) {
+            if(!isAdmin) return;
+            const { value: newVal } = await Swal.fire({ title: `Ganti ${field}`, input: 'text' });
+            if(newVal) { await fetch(`${dbUrl}hero/${field}.json`, { method: 'PUT', body: JSON.stringify(newVal) }); loadData(); }
+        }
+
+        async function addStory() {
+            const { value: form } = await Swal.fire({
+                title: 'Story Baru',
+                html: '<input id="s-t" class="swal2-input" placeholder="Judul"><textarea id="s-c" class="swal2-textarea" placeholder="Isi"></textarea>',
+                preConfirm: () => ({ title: document.getElementById('s-t').value, content: document.getElementById('s-c').value })
+            });
+            if(form.title) { await fetch(`${dbUrl}stories.json`, { method: 'POST', body: JSON.stringify(form) }); loadStories(); }
+        }
+
+        async function addProduct() {
+            const { value: f } = await Swal.fire({
+                title: 'Produk Baru',
+                html: '<input id="p-n" class="swal2-input" placeholder="Nama"><input id="p-h" class="swal2-input" placeholder="Harga"><input id="p-g" class="swal2-input" placeholder="Gambar"><input id="p-w" class="swal2-input" placeholder="WhatsApp">',
+                preConfirm: () => ({ name: document.getElementById('p-n').value, price: document.getElementById('p-h').value, image: document.getElementById('p-g').value, whatsapp: document.getElementById('p-w').value })
+            });
+            if(f.name) { await fetch(`${dbUrl}products.json`, { method: 'POST', body: JSON.stringify(f) }); loadProducts(); }
+        }
+
+        async function deleteData(path) {
+            if(confirm('Hapus?')) { await fetch(`${dbUrl}${path}.json`, { method: 'DELETE' }); location.reload(); }
+        }
+
+        // --- TOOLS & LOAD ---
+        async function downloadVideo() {
+            const url = document.getElementById('dl-url').value;
+            if(!url) return;
+            Swal.fire({ title: 'Mencari...', didOpen: () => Swal.showLoading() });
+            try {
+                const res = await fetch(`https://api.cloudhostid.biz.id/tiktok/dl?url=${url}`);
+                const d = await res.json();
+                window.open(d.result.url_nowm, '_blank');
+                Swal.close();
+            } catch(e) { Swal.fire('Error', '', 'error'); }
+        }
+
+        async function uploadFile() {
+            const fi = document.getElementById('file-input');
+            const st = document.getElementById('upload-status');
+            if(!fi.files[0]) return;
+            st.innerText = "⏳ Uploading...";
+            const fd = new FormData(); fd.append('file', fi.files[0]);
+            const r = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: fd });
+            const d = await r.json();
+            const link = d.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+            st.innerHTML = `✅ Link: <a href="${link}" target="_blank" class="underline">${link}</a>`;
+        }
+
         async function loadData() {
             const r = await fetch(dbUrl + "hero.json"); const h = await r.json();
             if(h) { 
                 document.getElementById('p-nama').innerText = h.nama || 'Abay Studio';
                 document.getElementById('p-bio').innerText = h.bio || 'Waiting For You';
-                document.getElementById('p-foto').src = h.foto || 'https://ui-avatars.com/api/?name=Abay';
+                document.getElementById('p-foto').src = h.foto || '';
                 document.getElementById('p-hobi').innerText = h.hobi || '-';
                 document.getElementById('p-skill').innerText = h.skill || '-';
                 document.getElementById('p-sekolah').innerText = h.sekolah || '-';
@@ -247,55 +302,16 @@
             }
         }
 
-        async function deleteData(path) {
-            Swal.fire({ title: 'Hapus data ini?', showCancelButton: true }).then(async (res) => {
-                if(res.isConfirmed) {
-                    await fetch(`${dbUrl}${path}.json`, { method: 'DELETE' });
-                    location.reload();
-                }
-            });
-        }
-
-        // --- TOOLS ---
-        async function downloadVideo() {
-            const url = document.getElementById('dl-url').value;
-            if(!url) return;
-            Swal.fire({ title: 'Mencari...', didOpen: () => Swal.showLoading() });
-            try {
-                const res = await fetch(`https://api.cloudhostid.biz.id/tiktok/dl?url=${url}`);
-                const d = await res.json();
-                window.open(d.result.url_nowm, '_blank');
-                Swal.close();
-            } catch(e) { Swal.fire('Gagal!', 'Cek link TikTok Mas.', 'error'); }
-        }
-
-        async function uploadFile() {
-            const fi = document.getElementById('file-input');
-            const st = document.getElementById('upload-status');
-            if(!fi.files[0]) return;
-            st.innerText = "⏳ Uploading...";
-            const fd = new FormData(); fd.append('file', fi.files[0]);
-            const r = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: fd });
-            const d = await r.json();
-            const link = d.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
-            st.innerHTML = `✅ Link: <a href="${link}" target="_blank" class="underline">${link}</a>`;
-        }
-
-        // --- AI ---
         function toggleAI() { document.getElementById('ai-window').classList.toggle('active'); }
         async function askAI() {
             const i = document.getElementById('ai-input'); const b = document.getElementById('ai-messages');
             const m = i.value.trim(); if(!m) return;
             b.innerHTML += `<div class="user-bubble p-4 text-sm text-white ml-auto max-w-[85%]">${m}</div>`; i.value = '';
-            b.scrollTop = b.scrollHeight;
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
-                    method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: m }] }] })
-                });
-                const d = await res.json();
-                const text = d.candidates[0].content.parts[0].text;
-                b.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${text}</div>`;
-            } catch(e) { b.innerHTML += `<div class="text-red-500 text-[10px]">Error AI!</div>`; }
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+                method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: m }] }] })
+            });
+            const d = await res.json();
+            b.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${d.candidates[0].content.parts[0].text}</div>`;
             b.scrollTop = b.scrollHeight;
         }
 
