@@ -59,17 +59,15 @@
         <div id="tools" class="tab-content">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-red-500">
-                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm"><i class="fab fa-tiktok text-red-500"></i> Video Downloader</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase tracking-widest">TikTok No Watermark</p>
-                    <input id="dl-url" type="text" placeholder="Link TikTok..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs mb-4 text-white focus:outline-none">
-                    <button onclick="downloadVideo()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Download</button>
+                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm">Video Downloader</h3>
+                    <input id="dl-url" type="text" placeholder="Link TikTok..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs mb-4 text-white">
+                    <button onclick="downloadVideo()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase">Download</button>
                 </div>
 
                 <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500">
-                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm"><i class="fas fa-link text-blue-500"></i> Link Generator</h3>
-                    <p class="text-[10px] opacity-40 mb-6 uppercase tracking-widest">Upload File (Max 1GB)</p>
+                    <h3 class="font-black uppercase mb-2 flex items-center gap-2 text-sm text-blue-500">Link Generator</h3>
                     <input type="file" id="file-input" class="hidden" onchange="uploadFile()">
-                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase transition active:scale-95">Select & Upload</button>
+                    <button id="upload-btn" onclick="document.getElementById('file-input').click()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase">Select & Upload</button>
                     <div id="upload-status" class="mt-4 text-center text-[10px] font-bold break-all text-blue-400"></div>
                 </div>
             </div>
@@ -80,28 +78,29 @@
         </div>
     </main>
 
-    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10 hover:border-blue-500 transition-all">
-        <svg class="w-8 h-8" viewBox="0 0 24 24"><path d="M12 2L14.85 9.15L22 12L14.85 14.85L12 22L9.15 14.85L2 12L9.15 9.15L12 2Z" fill="url(#gradAI)"/><defs><linearGradient id="gradAI" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4285F4"/><stop offset="0.5" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs></svg>
+    <div id="ai-toggle" onclick="toggleAI()" class="fixed bottom-6 right-6 w-14 h-14 bg-[#1a1a1a] rounded-2xl flex items-center justify-center cursor-pointer shadow-2xl z-[100] border border-white/10">
+        <i class="fas fa-robot text-blue-500"></i>
     </div>
 
     <div id="ai-window" class="fixed bottom-24 right-6 w-[92%] md:w-[400px] h-[70vh] bg-[#0f0f0f] rounded-[2rem] flex flex-col z-[101] border border-white/10 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-white/5 bg-[#161616] flex justify-between items-center">
             <span class="text-sm font-bold gemini-gradient italic">Gemini Abay Studio</span>
-            <button onclick="toggleAI()" class="text-white/30 hover:text-white"><i class="fas fa-times"></i></button>
+            <button onclick="toggleAI()"><i class="fas fa-times"></i></button>
         </div>
         <div id="ai-messages" class="flex-1 p-6 overflow-y-auto flex flex-col space-y-4 no-scrollbar">
-            <div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">Halo Mas Abay! Link generator sudah kembali ya. Ada lagi yang bisa dibantu?</div>
+            <div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">Halo Mas Abay! Semoga lancar jaya ya. Ada yang bisa saya bantu?</div>
         </div>
         <div class="p-4 bg-[#161616] border-t border-white/5">
             <div class="relative flex items-center">
-                <input id="ai-input" type="text" placeholder="Ketik pesan..." class="w-full bg-[#2b2b2b] border-none rounded-2xl px-5 py-4 pr-12 text-sm text-white focus:ring-1 focus:ring-blue-500 outline-none transition" onkeypress="if(event.key === 'Enter') askAI()">
-                <button onclick="askAI()" class="absolute right-3 text-blue-500 hover:text-white transition"><i class="fas fa-paper-plane"></i></button>
+                <input id="ai-input" type="text" placeholder="Ketik pesan..." class="w-full bg-[#2b2b2b] rounded-2xl px-5 py-4 text-sm text-white outline-none" onkeypress="if(event.key === 'Enter') askAI()">
+                <button onclick="askAI()" class="absolute right-3 text-blue-500"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
     <script>
         const dbUrl = "https://toko-49a45-default-rtdb.firebaseio.com/";
+        // KEY DARI SCREENSHOT MAS ABAY
         const GEMINI_KEY = "AIzaSyDjanGkO1X_oy8QMETuASpBUMsybzYviTE"; 
 
         window.onload = () => { loadData(); loadStories(); };
@@ -123,8 +122,8 @@
             box.scrollTop = box.scrollHeight;
 
             try {
-                // VERSI STABIL
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+                // PERBAIKAN: Menggunakan endpoint v1 dengan model gemini-1.5-flash
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -134,53 +133,39 @@
 
                 const data = await response.json();
                 
-                if (data.error) { throw new Error(data.error.message); }
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
 
                 const aiMsg = data.candidates[0].content.parts[0].text;
                 document.getElementById(loadId).remove();
-                // Format Bold
-                const formattedRes = aiMsg.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${formattedRes}</div>`;
+                box.innerHTML += `<div class="ai-bubble p-4 text-sm text-gray-200 max-w-[85%]">${aiMsg}</div>`;
                 
             } catch (err) {
-                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-[10px]">Error: ${err.message}. Coba refresh!</span>`;
+                document.getElementById(loadId).innerHTML = `<span class="text-red-400 text-[10px]">Error: ${err.message}. Ganti ke model yang support!</span>`;
             }
             box.scrollTop = box.scrollHeight;
         }
 
-        // --- FITUR DOWNLOAD TIKTOK (API CLOUDHOSTID) ---
         async function downloadVideo() {
             const url = document.getElementById('dl-url').value;
             if(!url) return Swal.fire('Oops', 'Mana linknya?', 'warning');
-
             Swal.fire({ title: 'Mencari Video...', didOpen: () => Swal.showLoading() });
-
             try {
-                // Menggunakan API cloudhostid sesuai permintaan
-                // Endpoint disesuaikan agar format JSON terbaca
-                const response = await fetch(`https://api.cloudhostid.biz.id/tiktok/dl?url=${url}`);
+                // API CLOUDHOSTID SESUAI PERMINTAAN
+                const response = await fetch(`https://api.cloudhostid.biz.id/tiktok/dl?url=${encodeURIComponent(url)}`);
                 const data = await response.json();
-
-                // Logika pengecekan hasil (menyesuaikan kemungkinan respon API)
                 if (data.result && data.result.url_nowm) {
                     window.open(data.result.url_nowm, '_blank');
                     Swal.fire('Sukses!', 'Video berhasil ditemukan.', 'success');
-                } else if (data.url_nowm) {
-                    window.open(data.url_nowm, '_blank');
-                    Swal.fire('Sukses!', 'Video berhasil ditemukan.', 'success');
-                } else if (data.data && data.data.url) { // Antisipasi format lain
-                    window.open(data.data.url, '_blank');
-                    Swal.fire('Sukses!', 'Video berhasil ditemukan.', 'success');
                 } else {
-                    throw new Error('Video tidak ditemukan');
+                    throw new Error();
                 }
             } catch (err) {
-                console.error(err);
-                Swal.fire('Gagal', 'Link salah atau server sedang sibuk.', 'error');
+                Swal.fire('Gagal', 'Link salah atau server sibuk.', 'error');
             }
         }
 
-        // --- FITUR UPLOAD FILE (LINK GENERATOR) - DIKEMBALIKAN ---
         async function uploadFile() {
             const fileInput = document.getElementById('file-input');
             const status = document.getElementById('upload-status');
@@ -196,11 +181,11 @@
                 if(data.status === 'success') {
                     const finalLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
                     status.innerHTML = `✅ Link: <a href="${finalLink}" target="_blank" class="underline text-blue-400">${finalLink}</a>`;
-                    Swal.fire('Berhasil!', 'File tersimpan di cloud.', 'success');
+                    Swal.fire('Berhasil!', 'Link file sudah siap.', 'success');
                 } else { throw new Error(); }
             } catch(e) {
-                status.innerHTML = "❌ Gagal. Coba file yang lebih kecil.";
-                Swal.fire('Error', 'Server sibuk, coba lagi nanti.', 'error');
+                status.innerHTML = "❌ Gagal. Ukuran terlalu besar atau server penuh.";
+                Swal.fire('Error', 'Gagal upload.', 'error');
             } finally { btn.disabled = false; }
         }
 
