@@ -105,11 +105,14 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 25px;
+            margin-top: 20px;
         }
+        
+        /* Modifikasi Card Penjelasan Menjadi Gelap */
         .cause-item {
-            background: #fdfdfd;
-            border: 1px solid #f0f0f0;
+            background: #2c3e50; /* Warna gelap mewah */
+            color: #ecf0f1; /* Teks abu terang untuk kenyamanan membaca */
+            border: 1px solid #233140;
             padding: 20px;
             border-radius: 12px;
             font-size: 0.95rem;
@@ -118,10 +121,10 @@
         .cause-item:hover {
             transform: translateY(-3px);
             border-color: var(--accent-blue);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .cause-item strong { 
-            color: var(--text-main); 
+            color: #ffffff; /* Judul bold berwarna putih murni */
             display: block; 
             margin-bottom: 5px; 
             font-size: 1.05rem;
@@ -308,8 +311,7 @@
 
         <div class="card">
             <h2>Apa itu Pemanasan Global?</h2>
-            <p>Sederhananya, pemanasan global adalah kondisi di mana suhu Bumi perlahan-lahan makin panas. Ini terjadi karena "gas kotor" berkumpul di langit dan menahan panas matahari supaya tidak bisa keluar dari Bumi. Akhirnya, Bumi kita jadi makin gerah. 
-  Berikut adalah penyebab terjadinya pemanasan global.</p>
+            <p style="color: var(--text-muted); font-size: 1.05rem;">Pemanasan global adalah kondisi saat suhu Bumi terus naik karena panas matahari terperangkap oleh polusi udara ("gas kotor") di langit.</p>
             
             <div class="elegant-summary">
                 <div class="cause-item">
