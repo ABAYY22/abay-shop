@@ -100,16 +100,31 @@
             border-bottom: 1px solid #edf2f7;
         }
 
-        /* Simulasi Interaktif */
+        /* Penjelasan Elegan */
+        .elegant-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .cause-item {
+            padding: 15px;
+            border-left: 2px solid #eee;
+            font-size: 0.95rem;
+        }
+        .cause-item strong { color: var(--text-main); display: block; margin-bottom: 5px; }
+
+        /* Simulasi Interaktif Modern */
         .simulation-area {
             text-align: center;
             padding: 20px 0;
+            perspective: 1000px;
         }
 
         .earth-container {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             margin: 0 auto 30px;
             display: flex;
             align-items: center;
@@ -121,16 +136,30 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: rgba(52, 152, 219, 0.1);
-            box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
-            transition: all 0.4s ease;
+            background: rgba(52, 152, 219, 0.15);
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.3);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1;
         }
 
         #globe {
-            font-size: 80px;
+            font-size: 90px;
             z-index: 2;
-            transition: transform 0.4s ease;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+        }
+
+        /* Efek Polusi Gumpalan Kabut */
+        .pollution-cloud {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100,100,100,0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 3;
+            pointer-events: none;
         }
 
         .slider-container {
@@ -140,8 +169,22 @@
 
         input[type=range] {
             width: 100%;
-            accent-color: var(--text-main);
+            height: 6px;
+            background: #dfe6e9;
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 15px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--text-main);
+            border-radius: 50%;
             cursor: pointer;
+            transition: 0.2s;
         }
 
         .metrics {
@@ -156,60 +199,76 @@
             font-size: 1.3rem;
         }
 
-        /* Latihan Soal */
-        .question-block {
-            margin-bottom: 30px;
+        /* Latihan Soal Wizard Style */
+        .quiz-wizard {
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .question-text {
-            font-weight: 500;
-            margin-bottom: 15px;
+        .question-block {
+            display: none; /* Sembunyikan semua awal */
+            animation: fadeIn 0.5s;
+        }
+
+        .question-block.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            width: 20%;
+            transition: width 0.3s;
         }
 
         .options label {
             display: block;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background-color: #f8fafc;
-            border: 1px solid #edf2f7;
-            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            background-color: #fdfdfd;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .options label:hover {
-            background-color: #edf2f7;
+            border-color: var(--accent-blue);
+            background-color: #f7fbff;
         }
 
         .options input[type="radio"] {
-            margin-right: 10px;
-        }
-
-        button {
-            background-color: var(--text-main);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #1a252f;
+            display: none; /* Hide radio default */
         }
 
         #quiz-result {
             margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: var(--border-radius);
             text-align: center;
             font-weight: 500;
             display: none;
+            animation: scaleIn 0.4s;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -217,7 +276,7 @@
 
     <div class="team-ticker-container">
         <div class="ticker-text">
-            <span><strong>TIM PENYUSUN:</strong></span>
+            <span><strong>ANGGOTA KELOMPOK:</strong></span>
             <span>1. Nadya Putri Verizky</span>
             <span>2. Erinne Affrianto</span>
             <span>3. Fatih Arkan Athallah</span>
@@ -228,32 +287,31 @@
 
     <header>
         <h1>Pemanasan Global</h1>
-        <p>Memahami perubahan iklim melalui simulasi dan evaluasi interaktif.</p>
+        <p>Eksplorasi ilmiah mengenai perubahan iklim melalui narasi dan simulasi eksklusif.</p>
     </header>
 
     <div class="container">
 
         <div class="card">
-            <h2>Mengenal Pemanasan Global</h2>
-            <p><strong>Pemanasan Global (Global Warming)</strong> adalah fenomena peningkatan suhu rata-rata atmosfer, lautan, dan daratan Bumi secara perlahan namun terus-menerus. Kondisi ini utamanya dipicu oleh penumpukan gas-gas rumah kaca di atmosfer yang memerangkap panas matahari, sebuah proses yang dikenal sebagai <em>Efek Rumah Kaca</em>.</p>
+            <h2>Esensi Krisis Iklim</h2>
+            <p>Pemanasan Global bukanlah sekadar statistik, melainkan perubahan fundamental pada ritme alam semesta kita. Suhu rata-rata planet meningkat seiring terperangkapnya radiasi inframerah oleh gas rumah kaca yang kian pekat.</p>
             
-            <h3 style="margin-top: 25px; font-weight: 500; font-size: 1.2rem; color: var(--text-main);">Apa Saja Penyebabnya?</h3>
-            <ul style="padding-left: 20px; color: var(--text-muted);">
-                <li style="margin-bottom: 10px;"><strong>Pembakaran Bahan Bakar Fosil:</strong> Penggunaan batu bara, minyak bumi, dan gas alam untuk kendaraan bermotor dan pembangkit listrik menghasilkan emisi Karbon Dioksida (CO2) yang sangat besar ke atmosfer.</li>
-                <li style="margin-bottom: 10px;"><strong>Deforestasi (Penebangan Hutan):</strong> Pohon berfungsi menyerap CO2. Penebangan dan pembakaran hutan secara liar membuat karbon yang tersimpan di dalam pohon dilepaskan kembali ke udara, sekaligus mengurangi jumlah pohon yang bisa menyerap karbon.</li>
-                <li style="margin-bottom: 10px;"><strong>Industri Peternakan dan Pertanian:</strong> Hewan ternak seperti sapi dan domba menghasilkan gas Metana (CH4) melalui proses pencernaan mereka. Metana memiliki efek pemanasan yang jauh lebih kuat dibandingkan CO2.</li>
-                <li style="margin-bottom: 10px;"><strong>Limbah dan Sampah:</strong> Tumpukan sampah organik yang membusuk di Tempat Pembuangan Akhir (TPA) melepaskan gas metana ke udara.</li>
-                <li style="margin-bottom: 10px;"><strong>Penggunaan CFC (Klorofluorokarbon):</strong> Penggunaan bahan kimia berlebih pada mesin pendingin (AC, kulkas) dan produk aerosol yang tidak hanya memerangkap panas tetapi juga merusak lapisan ozon Bumi.</li>
-            </ul>
+            <div class="elegant-summary">
+                <div class="cause-item"><strong>Fosil & Emisi</strong> Dekadensi energi dari batu bara dan minyak bumi melepaskan CO2 dalam volume yang masif.</div>
+                <div class="cause-item"><strong>Deforestasi</strong> Hilangnya paru-paru dunia mengurangi kemampuan alami Bumi dalam memurnikan udara.</div>
+                <div class="cause-item"><strong>Agrikultur</strong> Aktivitas peternakan menyumbang gas metana yang memiliki daya serap panas tinggi.</div>
+                <div class="cause-item"><strong>Gaya Hidup</strong> Konsumsi energi yang tidak efisien dan limbah yang tak terkelola memperburuk situasi.</div>
+            </div>
         </div>
 
         <div class="card">
-            <h2>Simulasi Dampak Emisi Karbon</h2>
-            <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px;">Geser tuas di bawah untuk melihat simulasi peningkatan suhu Bumi berdasarkan tingkat emisi CO2.</p>
+            <h2>Simulasi Termodinamika</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px;">Sesuaikan konsentrasi CO2 untuk mengamati respons atmosfer Bumi.</p>
             
             <div class="simulation-area">
                 <div class="earth-container">
                     <div id="atmosphere"></div>
+                    <div id="pollution" class="pollution-cloud"></div>
                     <div id="globe">🌍</div>
                 </div>
 
@@ -262,11 +320,11 @@
                     
                     <div class="metrics">
                         <div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">Konsentrasi CO2</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Konsentrasi Karbon</div>
                             <div class="metric-value" id="co2Value">280 ppm</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">Kenaikan Suhu</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Anomali Suhu</div>
                             <div class="metric-value" id="tempValue" style="color: var(--accent-blue);">+0.0 °C</div>
                         </div>
                     </div>
@@ -275,57 +333,58 @@
         </div>
 
         <div class="card">
-            <h2>Latihan Pemahaman</h2>
+            <h2>Evaluasi Mandiri</h2>
+            <div class="progress-bar"><div id="progress-fill"></div></div>
             
-            <form id="quizForm">
-                <div class="question-block">
-                    <div class="question-text">1. Gas apakah yang menjadi penyumbang terbesar dalam efek rumah kaca akibat aktivitas manusia?</div>
-                    <div class="options">
-                        <label><input type="radio" name="q1" value="salah"> Oksigen (O2)</label>
-                        <label><input type="radio" name="q1" value="benar"> Karbon Dioksida (CO2)</label>
-                        <label><input type="radio" name="q1" value="salah"> Nitrogen (N2)</label>
+            <div id="quiz-wizard" class="quiz-wizard">
+                <form id="quizForm">
+                    <div class="question-block active" data-step="1">
+                        <div class="question-text">1. Gas manakah yang memegang peran dominan dalam retensi panas di atmosfer?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> Oksigen murni</label>
+                            <label><input type="radio" name="q1" value="benar" onclick="nextStep(1)"> Karbon Dioksida (CO2)</label>
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> Argon</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="question-block">
-                    <div class="question-text">2. Manakah dari berikut ini yang merupakan dampak langsung dari mencairnya es di kutub?</div>
-                    <div class="options">
-                        <label><input type="radio" name="q2" value="salah"> Menurunnya suhu air laut</label>
-                        <label><input type="radio" name="q2" value="benar"> Kenaikan permukaan air laut</label>
-                        <label><input type="radio" name="q2" value="salah"> Bertambahnya luas daratan</label>
+                    <div class="question-block" data-step="2">
+                        <div class="question-text">2. Konsekuensi paling signifikan dari menyusutnya gletser kutub adalah...</div>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> Perluasan wilayah daratan</label>
+                            <label><input type="radio" name="q2" value="benar" onclick="nextStep(2)"> Ekspansi volume air laut</label>
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> Penurunan salinitas ekstrem</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="question-block">
-                    <div class="question-text">3. Sektor manakah yang menghasilkan emisi gas metana (CH4) paling tinggi?</div>
-                    <div class="options">
-                        <label><input type="radio" name="q3" value="salah"> Transportasi udara</label>
-                        <label><input type="radio" name="q3" value="salah"> Pembangkit listrik tenaga surya</label>
-                        <label><input type="radio" name="q3" value="benar"> Peternakan dan pertanian</label>
+                    <div class="question-block" data-step="3">
+                        <div class="question-text">3. Mengapa sektor agrikultur (peternakan) dianggap sebagai kontributor pemanasan global?</div>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> Penggunaan pupuk kimia saja</label>
+                            <label><input type="radio" name="q3" value="benar" onclick="nextStep(3)"> Emisi gas Metana yang tinggi</label>
+                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> Konsumsi air berlebih</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="question-block">
-                    <div class="question-text">4. Sumber energi terbarukan yang dapat membantu mengurangi laju pemanasan global adalah...</div>
-                    <div class="options">
-                        <label><input type="radio" name="q4" value="benar"> Tenaga angin dan surya</label>
-                        <label><input type="radio" name="q4" value="salah"> Batu bara dan minyak bumi</label>
-                        <label><input type="radio" name="q4" value="salah"> Gas alam</label>
+                    <div class="question-block" data-step="4">
+                        <div class="question-text">4. Solusi energi yang paling selaras dengan prinsip keberlanjutan adalah...</div>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="benar" onclick="nextStep(4)"> Energi fotovoltaik dan bayu</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> Gasifikasi batu bara</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> Pembakaran biomassa masif</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="question-block">
-                    <div class="question-text">5. Langkah kecil apa yang bisa dilakukan individu untuk mengurangi jejak karbon?</div>
-                    <div class="options">
-                        <label><input type="radio" name="q5" value="salah"> Membiarkan alat elektronik menyala saat tidak digunakan</label>
-                        <label><input type="radio" name="q5" value="benar"> Menggunakan transportasi umum atau bersepeda</label>
-                        <label><input type="radio" name="q5" value="salah"> Membakar sampah plastik di halaman</label>
+                    <div class="question-block" data-step="5">
+                        <div class="question-text">5. Tindakan individu yang paling efektif dalam menekan jejak karbon adalah...</div>
+                        <div class="options">
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> Membeli produk sekali pakai</label>
+                            <label><input type="radio" name="q5" value="benar" onclick="hitungNilai()"> Optimalisasi transportasi publik</label>
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> Penggunaan AC sepanjang hari</label>
+                        </div>
                     </div>
-                </div>
-
-                <button type="button" onclick="hitungNilai()">Lihat Hasil</button>
-                <div id="quiz-result"></div>
-            </form>
+                </form>
+            </div>
+            <div id="quiz-result"></div>
         </div>
 
     </div>
@@ -333,9 +392,10 @@
     <script>
         /* --- JAVASCRIPT --- */
         
-        // Logika Simulasi
+        // Logika Simulasi Modern
         const slider = document.getElementById('emisiSlider');
         const atmosphere = document.getElementById('atmosphere');
+        const pollution = document.getElementById('pollution');
         const globe = document.getElementById('globe');
         const co2Text = document.getElementById('co2Value');
         const tempText = document.getElementById('tempValue');
@@ -344,39 +404,54 @@
             let val = parseInt(this.value);
             co2Text.innerText = val + " ppm";
 
-            // Hitung kenaikan suhu fiktif untuk simulasi (Base 280ppm = 0 kenaikan)
             let tempRise = ((val - 280) * 0.005).toFixed(1);
             tempText.innerText = "+" + tempRise + " °C";
 
-            // Transisi Warna & Ukuran Atmosfer
-            // Semakin panas, atmosfer makin merah dan membesar
-            let scale = 1 + ((val - 280) / 1500);
+            // Visual: Atmosfer & Kabut Polusi
+            let scale = 1 + ((val - 280) / 1000);
             atmosphere.style.transform = `scale(${scale})`;
+            
+            let pollOpacity = (val - 280) / 720;
+            pollution.style.opacity = pollOpacity;
 
-            let redRatio = Math.min((val - 280) / 600, 1); // 0 to 1
+            let redRatio = Math.min((val - 280) / 600, 1);
             let blueRatio = 1 - redRatio;
 
             let r = Math.round(231 * redRatio + 52 * blueRatio);
             let g = Math.round(76 * redRatio + 152 * blueRatio);
             let b = Math.round(60 * redRatio + 219 * blueRatio);
 
-            atmosphere.style.background = `rgba(${r}, ${g}, ${b}, 0.2)`;
-            atmosphere.style.boxShadow = `0 0 40px rgba(${r}, ${g}, ${b}, 0.4)`;
-            
-            // Ubah warna teks suhu
+            atmosphere.style.background = `rgba(${r}, ${g}, ${b}, 0.25)`;
+            atmosphere.style.boxShadow = `0 0 50px rgba(${r}, ${g}, ${b}, 0.5)`;
             tempText.style.color = `rgb(${r}, ${g}, ${b})`;
 
-            // Ubah ikon bumi menjadi lelah jika terlalu panas
-            if (val > 700) {
+            // Animasi Bumi berdasarkan suhu
+            if (val > 800) {
                 globe.innerText = "🥵";
-            } else if (val > 450) {
+                globe.style.transform = "rotate(15deg) scale(1.1)";
+            } else if (val > 500) {
                 globe.innerText = "😰";
+                globe.style.transform = "rotate(-10deg)";
             } else {
                 globe.innerText = "🌍";
+                globe.style.transform = "rotate(0deg) scale(1)";
             }
         });
 
-        // Logika Latihan Soal
+        // Logika Quiz Wizard (Berpindah otomatis)
+        function nextStep(currentStep) {
+            setTimeout(() => {
+                const current = document.querySelector(`.question-block[data-step="${currentStep}"]`);
+                const next = document.querySelector(`.question-block[data-step="${currentStep + 1}"]`);
+                
+                if (next) {
+                    current.classList.remove('active');
+                    next.classList.add('active');
+                    document.getElementById('progress-fill').style.width = ((currentStep + 1) * 20) + "%";
+                }
+            }, 400); // Delay halus sebelum pindah
+        }
+
         function hitungNilai() {
             let skor = 0;
             const totalSoal = 5;
@@ -388,24 +463,20 @@
                 }
             }
 
+            document.getElementById('quiz-wizard').style.display = "none";
+            document.getElementById('progress-fill').style.width = "100%";
+            
             const resultDiv = document.getElementById('quiz-result');
             resultDiv.style.display = "block";
             
             if (skor === 100) {
-                resultDiv.innerHTML = `Luar Biasa! Skor Anda: <strong>${skor}/100</strong>.`;
+                resultDiv.innerHTML = `<div style="font-size:3rem">🏆</div><h2>Sempurna!</h2><p>Pengetahuan Anda setingkat pakar lingkungan.</p><h3>Skor: ${skor}/100</h3>`;
                 resultDiv.style.backgroundColor = "#e8f5e9";
                 resultDiv.style.color = "#2e7d32";
-                resultDiv.style.border = "1px solid #c8e6c9";
-            } else if (skor >= 60) {
-                resultDiv.innerHTML = `Cukup Baik. Skor Anda: <strong>${skor}/100</strong>. Mari pelajari lagi!`;
+            } else {
+                resultDiv.innerHTML = `<div style="font-size:3rem">✨</div><h2>Hasil Akhir</h2><p>Terima kasih telah berpartisipasi dalam edukasi ini.</p><h3>Skor: ${skor}/100</h3><button onclick="location.reload()" style="background:#2c3e50; margin-top:15px; width:auto">Coba Lagi</button>`;
                 resultDiv.style.backgroundColor = "#fff8e1";
                 resultDiv.style.color = "#f57f17";
-                resultDiv.style.border = "1px solid #ffecb3";
-            } else {
-                resultDiv.innerHTML = `Skor Anda: <strong>${skor}/100</strong>. Jangan menyerah, baca kembali materinya ya.`;
-                resultDiv.style.backgroundColor = "#ffebee";
-                resultDiv.style.color = "#c62828";
-                resultDiv.style.border = "1px solid #ffcdd2";
             }
         }
     </script>
