@@ -3,47 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edukasi Pemanasan Global</title>
+    <title>Bumi Lagi Gak Baik-Baik Aja</title>
     <style>
-        /* --- CSS: DESAIN ELEGAN & MINIMALIS --- */
+        /* --- CSS: PREMIUM DARK MODE & GLASSMORPHISM --- */
         :root {
-            --bg-color: #f7f9fc;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
-            --accent-blue: #3498db;
-            --accent-red: #e74c3c;
-            --border-radius: 16px;
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --danger: #ef4444;
+            --border-radius: 20px;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 10%, #1e293b 0%, #0f172a 100%);
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
-        /* Ticker Anggota Kelompok Bergerak */
+        /* Ticker Anggota Kelompok */
         .team-ticker-container {
-            background-color: #1a252f;
-            color: #ecf0f1;
-            padding: 10px 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 12px 0;
             overflow: hidden;
             white-space: nowrap;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .ticker-text {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 20s linear infinite;
+            animation: marquee 25s linear infinite;
         }
 
         .ticker-text span {
-            margin-right: 40px;
+            margin-right: 50px;
         }
 
         @keyframes marquee {
@@ -54,169 +61,177 @@
         /* Header */
         header {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 80px 20px 40px;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: var(--text-main);
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
 
         header p {
             color: var(--text-muted);
             font-size: 1.1rem;
             max-width: 600px;
-            margin: 10px auto 0;
+            margin: 15px auto 0;
         }
 
         /* Layout Container */
         .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
-            padding: 0 20px 60px;
+            padding: 0 20px 80px;
         }
 
+        /* Card Base */
         .card {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
             border-radius: var(--border-radius);
-            padding: 40px;
+            padding: 35px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card:hover {
-            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.2);
+            box-shadow: 0 15px 40px rgba(56, 189, 248, 0.05);
         }
 
         h2 {
-            font-weight: 400;
-            font-size: 1.5rem;
+            font-weight: 700;
+            font-size: 1.4rem;
             margin-top: 0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #edf2f7;
+            margin-bottom: 15px;
+            color: #fff;
         }
 
-        /* Penjelasan Menyusun Kebawah */
+        /* Penjelasan List */
         .elegant-summary {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
         
-        /* Card Penjelasan Gelap */
         .cause-item {
-            background: #2c3e50; 
-            color: #ecf0f1; 
-            border: 1px solid #233140;
-            padding: 20px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 14px;
             font-size: 0.95rem;
+            color: var(--text-muted);
             transition: all 0.3s ease;
         }
+        
         .cause-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-blue);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateX(5px);
+            border-color: rgba(56, 189, 248, 0.2);
         }
+        
         .cause-item strong { 
-            color: #ffffff; 
+            color: #fff;
             display: block; 
-            margin-bottom: 5px; 
-            font-size: 1.05rem;
-            font-weight: 500;
+            margin-bottom: 4px; 
+            font-size: 1rem;
+            font-weight: 600;
         }
 
-        /* Simulasi Interaktif Modern */
+        /* --- SIMULASI PREMIUM --- */
         .simulation-area {
             text-align: center;
-            padding: 20px 0;
-            perspective: 1000px;
+            padding: 30px 0 10px;
         }
 
         .earth-container {
             position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 0 auto 30px;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 40px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+        /* Efek Atmosfer Glow */
         #atmosphere {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: rgba(52, 152, 219, 0.15);
-            box-shadow: 0 0 40px rgba(52, 152, 219, 0.3);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            box-shadow: 0 0 40px var(--accent-glow);
+            transition: all 0.5s ease;
             z-index: 1;
         }
 
         #globe {
             font-size: 90px;
             z-index: 2;
-            transition: all 0.5s ease;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.2));
+            animation: float 4s ease-in-out infinite;
         }
 
-        /* Efek Polusi Gumpalan Kabut */
-        .pollution-cloud {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(100,100,100,0.4) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 3;
-            pointer-events: none;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .slider-container {
-            max-width: 400px;
+            max-width: 450px;
             margin: 0 auto;
         }
 
+        /* Custom Range Slider Premium */
         input[type=range] {
             width: 100%;
-            height: 6px;
-            background: #dfe6e9;
-            border-radius: 5px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
             outline: none;
             -webkit-appearance: none;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--text-main);
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
             border-radius: 50%;
             cursor: pointer;
-            transition: 0.2s;
+            transition: transform 0.1s;
+        }
+        
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
         }
 
         .metrics {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .metric-value {
-            font-weight: 600;
-            font-size: 1.3rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-top: 5px;
+            font-family: monospace;
         }
 
-        /* Latihan Soal Wizard Style */
+        /* --- KUIS SANTAI & INTERAKTIF --- */
         .quiz-wizard {
             min-height: 250px;
             display: flex;
@@ -226,7 +241,7 @@
 
         .question-block {
             display: none; 
-            animation: fadeIn 0.5s;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .question-block.active {
@@ -234,46 +249,52 @@
         }
 
         .question-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-            color: var(--text-main);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #fff;
+            line-height: 1.5;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .progress-bar {
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            margin-bottom: 30px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 35px;
             overflow: hidden;
         }
 
         #progress-fill {
             height: 100%;
-            background: var(--accent-blue);
+            background: linear-gradient(to right, #38bdf8, #818cf8);
             width: 20%;
-            transition: width 0.3s;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
         }
 
+        /* Pilihan Jawaban */
         .options label {
             display: block;
-            padding: 15px 20px;
+            padding: 16px 20px;
             margin-bottom: 12px;
-            background-color: #fdfdfd;
-            border: 1px solid #f0f0f0;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+            transition: all 0.25s ease;
         }
 
         .options label:hover {
-            border-color: var(--accent-blue);
-            background-color: #f7fbff;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            color: #fff;
+            transform: translateX(5px);
         }
 
         .options input[type="radio"] {
@@ -282,17 +303,33 @@
 
         #quiz-result {
             margin-top: 20px;
-            padding: 30px;
+            padding: 35px;
             border-radius: var(--border-radius);
             text-align: center;
-            font-weight: 500;
             display: none;
-            animation: scaleIn 0.4s;
+            animation: scaleIn 0.5s ease;
         }
 
         @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
+            from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
+        }
+
+        .btn-reload {
+            background: var(--accent);
+            color: #0f172a;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+        
+        .btn-reload:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent);
         }
     </style>
 </head>
@@ -301,53 +338,52 @@
     <div class="team-ticker-container">
         <div class="ticker-text">
             <span><strong>TIM PENYUSUN:</strong></span>
-            <span>1. Nadya Putri Verizky</span>
-            <span>2. Erinne Affrianto</span>
-            <span>3. Fatih Arkan Athallah</span>
-            <span>4. Poetra Ramadhan</span>
-            <span>5. Taufik Prajatama</span>
+            <span>👾 1. Nadya Putri Verizky</span>
+            <span>👾 2. Erinne Affrianto</span>
+            <span>👾 3. Fatih Arkan Athallah</span>
+            <span>👾 4. Poetra Ramadhan</span>
+            <span>👾 5. Taufik Prajatama</span>
         </div>
     </div>
 
     <header>
-        <h1>Pemanasan Global</h1>
-        <p>Ayo pahami apa yang terjadi pada Bumi kita lewat rangkuman dan simulasi interaktif.</p>
+        <h1>Bumi Lagi Meriang</h1>
+        <p>Gak usah pusing baca jurnal ilmiah. Di sini kita bahas santai kenapa Bumi makin panas dan cara ngatasinnya.</p>
     </header>
 
     <div class="container">
 
         <div class="card">
-            <h2>Apa itu Pemanasan Global?</h2>
-            <p style="color: var(--text-muted); font-size: 1.05rem;">Pemanasan global adalah kondisi saat suhu Bumi terus naik karena panas matahari terperangkap oleh polusi udara ("gas kotor") di langit.</p>
+            <h2>Bumi Kenapa Sih?</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Sederhananya: Suhu Bumi makin naik karena "gas kotor" numpuk di langit. Panas matahari yang harusnya mantul balik ke luar angkasa, malah kejebak. Bumi pun jadi makin gerah.</p>
             
             <div class="elegant-summary">
                 <div class="cause-item">
-                    <strong>🚗 Asap Kendaraan dan Pabrik</strong> 
-                    Penggunaan bensin dan batu bara untuk motor, mobil, dan pembangkit listrik menghasilkan gas kotor dalam jumlah raksasa.
+                    <strong>🚗 Gas Buang Kendaraan & Pabrik</strong> 
+                    Asap knalpot kita dan cerobong pabrik itu nyumbang Karbon Dioksida yang paling hobi nahan panas.
                 </div>
                 <div class="cause-item">
-                    <strong>🌳 Hutan yang Terus Ditebang</strong> 
-                    Pohon harusnya bertugas menyerap gas kotor dan bikin sejuk. Karena ditebang, tidak ada lagi yang membersihkan udara kita.
+                    <strong>🪓 Hutan Dibabatin</strong> 
+                    Pohon itu ibarat AC alami Bumi yang nyerap gas kotor. Kalau ditebang terus, siapa yang mau bersihin udara?
                 </div>
                 <div class="cause-item">
-                    <strong>🐄 Kentut dan Kotoran Hewan Ternak</strong> 
-                    Peternakan sapi skala besar menghasilkan gas Metana yang ternyata jauh lebih kuat mengurung panas dibanding asap mobil.
+                    <strong>🍔 Industri Peternakan</strong> 
+                    Jangan salah, sendawa sama kotoran sapi itu ngeluarin gas Metana. Daya tahannya buat nahan panas gokil bgt, lebih kuat dari asap mobil!
                 </div>
                 <div class="cause-item">
-                    <strong>🗑️ Sampah yang Menumpuk</strong> 
-                    Tumpukan sampah plastik dan makanan yang membusuk di tempat pembuangan juga ikutan melepas gas beracun ke udara.
+                    <strong>🗑️ Sampah yang Menggunung</strong> 
+                    Sampah plastik dan sisa makanan yang membusuk di TPA juga ikutan ngelepasin gas berbahaya ke udara.
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>Simulasi Termodinamika</h2>
-            <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px;">Sesuaikan konsentrasi CO2 untuk mengamati respons atmosfer Bumi.</p>
+            <h2>Simulasi Kontrol Atmosfer</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px; font-size: 0.9rem;">Geser slidernya buat liat apa jadinya kalau Karbon numpuk.</p>
             
             <div class="simulation-area">
                 <div class="earth-container">
                     <div id="atmosphere"></div>
-                    <div id="pollution" class="pollution-cloud"></div>
                     <div id="globe">🌍</div>
                 </div>
 
@@ -355,13 +391,13 @@
                     <input type="range" id="emisiSlider" min="280" max="1000" value="280">
                     
                     <div class="metrics">
-                        <div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Konsentrasi Karbon</div>
+                        <div style="text-align: left;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Kadar Karbon</div>
                             <div class="metric-value" id="co2Value">280 ppm</div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">Anomali Suhu</div>
-                            <div class="metric-value" id="tempValue" style="color: var(--accent-blue);">+0.0 °C</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Kenaikan Suhu</div>
+                            <div class="metric-value" id="tempValue" style="color: var(--accent);">+0.0 °C</div>
                         </div>
                     </div>
                 </div>
@@ -369,53 +405,53 @@
         </div>
 
         <div class="card">
-            <h2>Misi Penyelamatan Bumi</h2>
+            <h2>Tes Seberapa Peduli Lu</h2>
             <div class="progress-bar"><div id="progress-fill"></div></div>
             
             <div id="quiz-wizard" class="quiz-wizard">
                 <form id="quizForm">
                     <div class="question-block active" data-step="1">
-                        <div class="question-text">1. Bayangkan atmosfer Bumi adalah rumah kaca raksasa. Siapakah "tersangka utama" yang paling jago menjebak panas matahari di dalamnya?</div>
+                        <div class="question-text">1. Atmosfer Bumi tuh ibarat rumah kaca raksasa. Nah, siapa sih "tersangka utama" yang paling jago bikin Bumi makin gerah?</div>
                         <div class="options">
-                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 💨 Oksigen murni (Si pemberi nafas segar)</label>
-                            <label><input type="radio" name="q1" value="benar" onclick="nextStep(1)"> 🛢️ Karbon Dioksida / CO2 (Si ahli perangkap panas)</label>
-                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 🧊 Argon (Si gas pasif yang cuek)</label>
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 💨 Oksigen (Padahal bikin seger)</label>
+                            <label><input type="radio" name="q1" value="benar" onclick="nextStep(1)"> 🛢️ Karbon Dioksida / CO2 (Si biang kerok)</label>
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 🧊 Argon (Gas cuek yang gak ngaruh)</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="2">
-                        <div class="question-text">2. Jika semua es di kutub mencair dan "pindah rumah" ke lautan, efek domino terbesar apa yang akan langsung menimpa kita?</div>
+                        <div class="question-text">2. Kalau es di kutub terus-terusan mencair gara-gara kita mager jaga lingkungan, apa efek terparah yang bakal kejadian?</div>
                         <div class="options">
-                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🏝️ Daratan kita bakal makin luas dan lebar</label>
-                            <label><input type="radio" name="q2" value="benar" onclick="nextStep(2)"> 🌊 Air laut naik dan pelan-pelan menenggelamkan pesisir</label>
-                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🧂 Rasa air laut otomatis berubah jadi tawar seketika</label>
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🏝️ Daratan kita bakal makin luas</label>
+                            <label><input type="radio" name="q2" value="benar" onclick="nextStep(2)"> 🌊 Air laut naik dan pelan-pelan nenggelamin kota pesisir</label>
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🧂 Rasa air laut otomatis berubah jadi tawar</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="3">
-                        <div class="question-text">3. Sapi sering dituduh berkontribusi pada pemanasan global. Ternyata, "senjata rahasia" apa yang mereka keluarkan lewat sendawa dan kentut?</div>
+                        <div class="question-text">3. Denger-denger sendawa sama kentut sapi itu bikin Bumi makin panas. Emang mereka ngeluarin apaan sih?</div>
                         <div class="options">
-                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> 🌬️ Hembusan Oksigen murni yang wangi</label>
-                            <label><input type="radio" name="q3" value="benar" onclick="nextStep(3)"> 🔥 Gas Metana yang super kuat mengurung panas</label>
+                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> 🌬️ Hembusan Oksigen wangi pandan</label>
+                            <label><input type="radio" name="q3" value="benar" onclick="nextStep(3)"> 🔥 Gas Metana yang nahan panasnya kenceng bgt</label>
                             <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> ❄️ Gas Nitrogen pembeku udara</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="4">
-                        <div class="question-text">4. Jika kamu adalah pahlawan super pelindung iklim, sumber energi keren mana yang akan kamu pilih untuk menyelamatkan masa depan?</div>
+                        <div class="question-text">4. Kalau lu dapet kekuatan buat milih sumber energi masa depan biar Bumi selamat, mana yang bakal lu sikat?</div>
                         <div class="options">
-                            <label><input type="radio" name="q4" value="benar" onclick="nextStep(4)"> ☀️ Listrik dari kincir angin dan panel surya</label>
-                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🏭 Mengolah kembali sisa-sisa batu bara</label>
-                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🪵 Membakar kayu pohon secara besar-besaran</label>
+                            <label><input type="radio" name="q4" value="benar" onclick="nextStep(4)"> ☀️ Listrik dari kincir angin & panel surya</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🏭 Olah kembali sisa-sisa batu bara</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🪵 Tebang terus bakar kayu pohon se-hutan</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="5">
-                        <div class="question-text">5. Untuk memotong "jejak karbon" pribadimu agar Bumi tidak makin gerah, aksi nyata apa yang paling berdampak?</div>
+                        <div class="question-text">5. Biar lu gak nambah-nambahin beban Bumi yang udah meriang ini, aksi receh tapi ngefek apa yang bisa lu lakuin?</div>
                         <div class="options">
-                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> 🛍️ Sering beli barang sekali pakai biar praktis</label>
-                            <label><input type="radio" name="q5" value="benar" onclick="hitungNilai()"> 🚌 Lebih sering naik kendaraan umum atau bersepeda</label>
-                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> ❄️ Menyalakan AC kamar seharian nonstop</label>
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> 🛍️ Belanja pakai kantong plastik terus biar praktis</label>
+                            <label><input type="radio" name="q5" value="benar" onclick="hitungNilai()"> 🚌 Lebih sering naik bus umum atau jalan kaki</label>
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> ❄️ Nyalain AC kamar 16 derajat seharian nonstop</label>
                         </div>
                     </div>
                 </form>
@@ -428,10 +464,9 @@
     <script>
         /* --- JAVASCRIPT --- */
         
-        // Logika Simulasi Modern
+        // Logika Simulasi Premium
         const slider = document.getElementById('emisiSlider');
         const atmosphere = document.getElementById('atmosphere');
-        const pollution = document.getElementById('pollution');
         const globe = document.getElementById('globe');
         const co2Text = document.getElementById('co2Value');
         const tempText = document.getElementById('tempValue');
@@ -443,34 +478,29 @@
             let tempRise = ((val - 280) * 0.005).toFixed(1);
             tempText.innerText = "+" + tempRise + " °C";
 
-            // Visual: Atmosfer & Kabut Polusi
-            let scale = 1 + ((val - 280) / 1000);
+            // Visual Atmosfer (Glow & Scale)
+            let scale = 1 + ((val - 280) / 720) * 0.3;
             atmosphere.style.transform = `scale(${scale})`;
             
-            let pollOpacity = (val - 280) / 720;
-            pollution.style.opacity = pollOpacity;
+            // Perubahan Warna Glow (Biru ke Merah Menyala)
+            let redRatio = (val - 280) / 720;
+            let r = Math.round(56 + (183 * redRatio)); // Menuju 239
+            let g = Math.round(189 - (121 * redRatio)); // Menuju 68
+            let b = Math.round(248 - (180 * redRatio)); // Menuju 68
 
-            let redRatio = Math.min((val - 280) / 600, 1);
-            let blueRatio = 1 - redRatio;
-
-            let r = Math.round(231 * redRatio + 52 * blueRatio);
-            let g = Math.round(76 * redRatio + 152 * blueRatio);
-            let b = Math.round(60 * redRatio + 219 * blueRatio);
-
-            atmosphere.style.background = `rgba(${r}, ${g}, ${b}, 0.25)`;
-            atmosphere.style.boxShadow = `0 0 50px rgba(${r}, ${g}, ${b}, 0.5)`;
+            atmosphere.style.boxShadow = `0 0 40px rgba(${r}, ${g}, ${b}, 0.5)`;
             tempText.style.color = `rgb(${r}, ${g}, ${b})`;
 
-            // Animasi Bumi berdasarkan suhu
+            // Perubahan Emote Bumi
             if (val > 800) {
                 globe.innerText = "🌋";
-                globe.style.transform = "rotate(15deg) scale(1.1)";
+                globe.style.filter = "drop-shadow(0 0 20px rgba(239, 68, 68, 0.5))";
             } else if (val > 500) {
-                globe.innerText = " 🏜";
-                globe.style.transform = "rotate(-10deg)";
+                globe.innerText = "🏜";
+                globe.style.filter = "drop-shadow(0 0 20px rgba(245, 158, 11, 0.4))";
             } else {
                 globe.innerText = "🌍";
-                globe.style.transform = "rotate(0deg) scale(1)";
+                globe.style.filter = "drop-shadow(0 0 20px rgba(56, 189, 248, 0.3))";
             }
         });
 
@@ -506,13 +536,13 @@
             resultDiv.style.display = "block";
             
             if (skor === 100) {
-                resultDiv.innerHTML = `<div style="font-size:3rem">🏆</div><h2>Sempurna!</h2><p>Kamu resmi jadi pahlawan penjaga iklim Bumi.</p><h3>Skor: ${skor}/100</h3>`;
-                resultDiv.style.backgroundColor = "#e8f5e9";
-                resultDiv.style.color = "#2e7d32";
+                resultDiv.innerHTML = `<div style="font-size:3.5rem">👑</div><h2 style="color:#fff;">Gokil! Nilai Lu 100</h2><p style="color:var(--text-muted);">Lu paham bgt sama masalah iklim. Resmi jadi pahlawan penjaga Bumi!</p>`;
+                resultDiv.style.background = "rgba(34, 197, 94, 0.1)";
+                resultDiv.style.border = "1px solid rgba(34, 197, 94, 0.2)";
             } else {
-                resultDiv.innerHTML = `<div style="font-size:3rem">✨</div><h2>Hasil Akhir</h2><p>Terima kasih telah mencoba kuis interaktif ini.</p><h3>Skor: ${skor}/100</h3><button onclick="location.reload()" style="background:#2c3e50; margin-top:15px; width:auto">Coba Lagi</button>`;
-                resultDiv.style.backgroundColor = "#fff8e1";
-                resultDiv.style.color = "#f57f17";
+                resultDiv.innerHTML = `<div style="font-size:3.5rem">🔥</div><h2 style="color:#fff;">Skor Lu: ${skor}/100</h2><p style="color:var(--text-muted);">Lumayan lah ya, daripada gak peduli sama sekali. Yuk lebih dijaga lagi Bumi kita!</p><button class="btn-reload" onclick="location.reload()">Ulangi Kuis</button>`;
+                resultDiv.style.background = "rgba(245, 158, 11, 0.1)";
+                resultDiv.style.border = "1px solid rgba(245, 158, 11, 0.2)";
             }
         }
     </script>
