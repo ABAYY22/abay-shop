@@ -108,10 +108,10 @@
             margin-top: 20px;
         }
         
-        /* Modifikasi Card Penjelasan Menjadi Gelap */
+        /* Card Penjelasan Gelap */
         .cause-item {
-            background: #2c3e50; /* Warna gelap mewah */
-            color: #ecf0f1; /* Teks abu terang untuk kenyamanan membaca */
+            background: #2c3e50; 
+            color: #ecf0f1; 
             border: 1px solid #233140;
             padding: 20px;
             border-radius: 12px;
@@ -124,7 +124,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         .cause-item strong { 
-            color: #ffffff; /* Judul bold berwarna putih murni */
+            color: #ffffff; 
             display: block; 
             margin-bottom: 5px; 
             font-size: 1.05rem;
@@ -225,12 +225,19 @@
         }
 
         .question-block {
-            display: none; /* Sembunyikan semua awal */
+            display: none; 
             animation: fadeIn 0.5s;
         }
 
         .question-block.active {
             display: block;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-main);
         }
 
         @keyframes fadeIn {
@@ -270,7 +277,7 @@
         }
 
         .options input[type="radio"] {
-            display: none; /* Hide radio default */
+            display: none; 
         }
 
         #quiz-result {
@@ -362,53 +369,53 @@
         </div>
 
         <div class="card">
-            <h2>Evaluasi Mandiri</h2>
+            <h2>Misi Penyelamatan Bumi</h2>
             <div class="progress-bar"><div id="progress-fill"></div></div>
             
             <div id="quiz-wizard" class="quiz-wizard">
                 <form id="quizForm">
                     <div class="question-block active" data-step="1">
-                        <div class="question-text">1. Gas manakah yang memegang peran dominan dalam retensi panas di atmosfer?</div>
+                        <div class="question-text">1. Bayangkan atmosfer Bumi adalah rumah kaca raksasa. Siapakah "tersangka utama" yang paling jago menjebak panas matahari di dalamnya?</div>
                         <div class="options">
-                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> Oksigen murni</label>
-                            <label><input type="radio" name="q1" value="benar" onclick="nextStep(1)"> Karbon Dioksida (CO2)</label>
-                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> Argon</label>
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 💨 Oksigen murni (Si pemberi nafas segar)</label>
+                            <label><input type="radio" name="q1" value="benar" onclick="nextStep(1)"> 🛢️ Karbon Dioksida / CO2 (Si ahli perangkap panas)</label>
+                            <label><input type="radio" name="q1" value="salah" onclick="nextStep(1)"> 🧊 Argon (Si gas pasif yang cuek)</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="2">
-                        <div class="question-text">2. Konsekuensi paling signifikan dari menyusutnya gletser kutub adalah...</div>
+                        <div class="question-text">2. Jika semua es di kutub mencair dan "pindah rumah" ke lautan, efek domino terbesar apa yang akan langsung menimpa kita?</div>
                         <div class="options">
-                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> Perluasan wilayah daratan</label>
-                            <label><input type="radio" name="q2" value="benar" onclick="nextStep(2)"> Ekspansi volume air laut</label>
-                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> Penurunan salinitas ekstrem</label>
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🏝️ Daratan kita bakal makin luas dan lebar</label>
+                            <label><input type="radio" name="q2" value="benar" onclick="nextStep(2)"> 🌊 Air laut naik dan pelan-pelan menenggelamkan pesisir</label>
+                            <label><input type="radio" name="q2" value="salah" onclick="nextStep(2)"> 🧂 Rasa air laut otomatis berubah jadi tawar seketika</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="3">
-                        <div class="question-text">3. Mengapa sektor agrikultur (peternakan) dianggap sebagai kontributor pemanasan global?</div>
+                        <div class="question-text">3. Sapi sering dituduh berkontribusi pada pemanasan global. Ternyata, "senjata rahasia" apa yang mereka keluarkan lewat sendawa dan kentut?</div>
                         <div class="options">
-                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> Penggunaan pupuk kimia saja</label>
-                            <label><input type="radio" name="q3" value="benar" onclick="nextStep(3)"> Emisi gas Metana yang tinggi</label>
-                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> Konsumsi air berlebih</label>
+                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> 🌬️ Hembusan Oksigen murni yang wangi</label>
+                            <label><input type="radio" name="q3" value="benar" onclick="nextStep(3)"> 🔥 Gas Metana yang super kuat mengurung panas</label>
+                            <label><input type="radio" name="q3" value="salah" onclick="nextStep(3)"> ❄️ Gas Nitrogen pembeku udara</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="4">
-                        <div class="question-text">4. Solusi energi yang paling selaras dengan prinsip keberlanjutan adalah...</div>
+                        <div class="question-text">4. Jika kamu adalah pahlawan super pelindung iklim, sumber energi keren mana yang akan kamu pilih untuk menyelamatkan masa depan?</div>
                         <div class="options">
-                            <label><input type="radio" name="q4" value="benar" onclick="nextStep(4)"> Energi fotovoltaik dan bayu</label>
-                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> Gasifikasi batu bara</label>
-                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> Pembakaran biomassa masif</label>
+                            <label><input type="radio" name="q4" value="benar" onclick="nextStep(4)"> ☀️ Listrik dari kincir angin dan panel surya</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🏭 Mengolah kembali sisa-sisa batu bara</label>
+                            <label><input type="radio" name="q4" value="salah" onclick="nextStep(4)"> 🪵 Membakar kayu pohon secara besar-besaran</label>
                         </div>
                     </div>
 
                     <div class="question-block" data-step="5">
-                        <div class="question-text">5. Tindakan individu yang paling efektif dalam menekan jejak karbon adalah...</div>
+                        <div class="question-text">5. Untuk memotong "jejak karbon" pribadimu agar Bumi tidak makin gerah, aksi nyata apa yang paling berdampak?</div>
                         <div class="options">
-                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> Membeli produk sekali pakai</label>
-                            <label><input type="radio" name="q5" value="benar" onclick="hitungNilai()"> Optimalisasi transportasi publik</label>
-                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> Penggunaan AC sepanjang hari</label>
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> 🛍️ Sering beli barang sekali pakai biar praktis</label>
+                            <label><input type="radio" name="q5" value="benar" onclick="hitungNilai()"> 🚌 Lebih sering naik kendaraan umum atau bersepeda</label>
+                            <label><input type="radio" name="q5" value="salah" onclick="hitungNilai()"> ❄️ Menyalakan AC kamar seharian nonstop</label>
                         </div>
                     </div>
                 </form>
@@ -459,7 +466,7 @@
                 globe.innerText = "🌋";
                 globe.style.transform = "rotate(15deg) scale(1.1)";
             } else if (val > 500) {
-                globe.innerText = "🏜";
+                globe.innerText = " 🏜";
                 globe.style.transform = "rotate(-10deg)";
             } else {
                 globe.innerText = "🌍";
@@ -478,7 +485,7 @@
                     next.classList.add('active');
                     document.getElementById('progress-fill').style.width = ((currentStep + 1) * 20) + "%";
                 }
-            }, 400); // Delay halus sebelum pindah
+            }, 400); 
         }
 
         function hitungNilai() {
@@ -499,11 +506,11 @@
             resultDiv.style.display = "block";
             
             if (skor === 100) {
-                resultDiv.innerHTML = `<div style="font-size:3rem">🏆</div><h2>Sempurna!</h2><p>Pengetahuan Anda setingkat pakar lingkungan.</p><h3>Skor: ${skor}/100</h3>`;
+                resultDiv.innerHTML = `<div style="font-size:3rem">🏆</div><h2>Sempurna!</h2><p>Kamu resmi jadi pahlawan penjaga iklim Bumi.</p><h3>Skor: ${skor}/100</h3>`;
                 resultDiv.style.backgroundColor = "#e8f5e9";
                 resultDiv.style.color = "#2e7d32";
             } else {
-                resultDiv.innerHTML = `<div style="font-size:3rem">✨</div><h2>Hasil Akhir</h2><p>Terima kasih telah berpartisipasi dalam edukasi ini.</p><h3>Skor: ${skor}/100</h3><button onclick="location.reload()" style="background:#2c3e50; margin-top:15px; width:auto">Coba Lagi</button>`;
+                resultDiv.innerHTML = `<div style="font-size:3rem">✨</div><h2>Hasil Akhir</h2><p>Terima kasih telah mencoba kuis interaktif ini.</p><h3>Skor: ${skor}/100</h3><button onclick="location.reload()" style="background:#2c3e50; margin-top:15px; width:auto">Coba Lagi</button>`;
                 resultDiv.style.backgroundColor = "#fff8e1";
                 resultDiv.style.color = "#f57f17";
             }
